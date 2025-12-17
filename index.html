@@ -28,7 +28,7 @@
 
         input { width: 100%; padding: 16px; margin: 12px 0; border: 2px solid #e2e8f0; border-radius: 15px; outline: none; box-sizing: border-box; font-family: 'Tajawal'; }
 
-        .sticky-name { font-weight: 800; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-align: center; font-size: 24px; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        .sticky-name { font-weight: 800; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-align: center; font-size: 23px; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
 
         .container { flex: 1; max-width: 800px; margin: 20px auto; padding: 20px; width: 100%; box-sizing: border-box; }
         
@@ -42,15 +42,7 @@
             overflow: hidden;
         }
 
-        .quiz-card::before, .dev-card::before { 
-            content: ""; 
-            position: absolute; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 6px; 
-            background: var(--grad); 
-        }
+        .quiz-card::before, .dev-card::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 6px; background: var(--grad); }
 
         .progress-bar { height: 10px; background: #e2e8f0; border-radius: 20px; margin-bottom: 20px; overflow: hidden; }
         #progress-fill { height: 100%; background: var(--grad); width: 0%; transition: 0.4s; }
@@ -68,16 +60,13 @@
 
         .dev-card { text-align: center; }
         .dev-brand-footer { font-weight: 800; color: var(--primary); margin-bottom: 10px; font-size: 19px; }
-        .contact-text { font-size: 14px; color: #64748b; margin-bottom: 15px; display: block; font-weight: bold; }
         .social-row { display: flex; justify-content: center; gap: 30px; }
         
         .circle-link {
             width: 55px; height: 55px; border-radius: 50%; display: flex;
             justify-content: center; align-items: center; color: white;
             font-size: 26px; text-decoration: none; transition: 0.3s;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
-        .circle-link:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
         .wa-bg { background-color: var(--whatsapp); }
         .fb-bg { background-color: var(--facebook); }
 
@@ -101,7 +90,7 @@
 <div class="container">
     <div id="quiz-ui" style="display: none;">
         <div class="quiz-card">
-            <div class="sticky-name">"Omar Abdel Tawab Saleh"</div>
+            <div class="sticky-name">Omar Abdel Tawab Saleh</div>
             <div class="progress-bar"><div id="progress-fill"></div></div>
             <div id="questions-container"></div>
 
@@ -128,22 +117,15 @@
 
         <div class="dev-card">
             <div class="dev-brand-footer">Omar Abdel Tawab Saleh</div>
-            <span class="contact-text">تواصل مع المطور عبر:</span>
             <div class="social-row">
-                <a href="https://wa.me/201202763155" target="_blank" class="circle-link wa-bg">
-                    <i class="fab fa-whatsapp"></i>
-                </a>
-                <a href="https://www.facebook.com/share/1CGUeNkP75/" target="_blank" class="circle-link fb-bg">
-                    <i class="fab fa-facebook-f"></i>
-                </a>
+                <a href="https://wa.me/201202763155" target="_blank" class="circle-link wa-bg"><i class="fab fa-whatsapp"></i></a>
+                <a href="https://www.facebook.com/share/1CGUeNkP75/" target="_blank" class="circle-link fb-bg"><i class="fab fa-facebook-f"></i></a>
             </div>
         </div>
     </div>
 </div>
 
-<footer>
-    © 2025 Omar Abdel Tawab Saleh - جميع الحقوق محفوظة
-</footer>
+<footer>© 2025 Omar Abdel Tawab Saleh - جميع الحقوق محفوظة</footer>
 
 <script>
     const BOT_TOKEN = '8237095382:AAEwtkETTGq3VEp1flZrIKVXQTWF5KGkCiM'; 
@@ -175,12 +157,17 @@
     let currentIdx = 0;
     let userAnswers = new Array(questions.length).fill(null);
 
-    // دالة مساعدة للإرسال لتليجرام لضمان عدم التكرار
+    // دالة جلب رقم الزيارة (بشكل محاكي تراكمي)
+    function getVisitNumber() {
+        let count = localStorage.getItem('global_visit_count') || 5; // يبدأ من 5 كما في مثالك
+        count = parseInt(count) + 1;
+        localStorage.setItem('global_visit_count', count);
+        return count;
+    }
+
     function sendToTelegram(msg) {
         const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}`;
-        const img = new Image();
-        img.src = url;
-        fetch(url).catch(e => console.error("فشل الإرسال:", e));
+        fetch(url).catch(e => console.error("Error:", e));
     }
 
     function startQuiz() {
@@ -191,8 +178,11 @@
             document.getElementById('auth-err').style.display='block'; return;
         }
 
-        // إرسال إشعار دخول جديد فوراً
-        const loginMsg = `🔔 إشعار دخول جديد للمنصة\n\n👤 الاسم: ${name}\n🏛️ الفرقة: ${grade}\n📅 التوقيت: ${new Date().toLocaleTimeString('ar-EG')}`;
+        const visitNum = getVisitNumber();
+        const now = new Date().toLocaleString('ar-EG');
+
+        const loginMsg = `✨ طالب جديد دخل المنصة ✨\n━━━━━━━━━━━━━━\n👤 الاسم: ${name}\n🏛️ الفرقة: ${grade}\n📊 رقم الزيارة: ${visitNum}\n🕒 التوقيت: ${now}\n━━━━━━━━━━━━━━\n🚀 تم التطوير بواسطة عمر عبد التواب`;
+        
         sendToTelegram(loginMsg);
 
         document.getElementById('auth-screen').style.display = 'none';
@@ -206,7 +196,6 @@
         container.style.display = 'block';
         document.getElementById('confirm-screen').style.display = 'none';
         document.getElementById('nav-controls').style.display = 'flex';
-
         container.innerHTML = `<div class="q-text">${currentIdx + 1}. ${q.q}</div>${q.o.map(opt => `<div class="option-btn ${userAnswers[currentIdx] === opt ? 'selected' : ''}" onclick="selectOption('${opt}')">${opt}</div>`).join('')}`;
         document.getElementById('prev-btn').disabled = currentIdx === 0;
         document.getElementById('next-btn').innerText = currentIdx === questions.length - 1 ? "مراجعة إجاباتك" : "التالي";
@@ -214,12 +203,7 @@
     }
 
     function selectOption(opt) { userAnswers[currentIdx] = opt; showQuestion(); }
-
-    function nextQuestion() {
-        if (currentIdx < questions.length - 1) { currentIdx++; showQuestion(); } 
-        else { showConfirmation(); }
-    }
-
+    function nextQuestion() { if (currentIdx < questions.length - 1) { currentIdx++; showQuestion(); } else { showConfirmation(); } }
     function prevQuestion() { if (currentIdx > 0) { currentIdx--; showQuestion(); } }
 
     function showConfirmation() {
@@ -235,24 +219,22 @@
     function submitFinal() {
         const name = document.getElementById('name-input').value;
         const grade = document.getElementById('grade-input').value;
-        
         document.getElementById('confirm-screen').style.display = 'none';
         document.getElementById('result-screen').style.display = 'block';
         
         let score = 0;
+        userAnswers.forEach((ans, i) => { if(ans === questions[i].a) score++; });
+        document.getElementById('score-display').innerText = `${score} / ${questions.length}`;
+
+        const resultMsg = `🎯 نتيجة اختبار الطالب 🎯\n━━━━━━━━━━━━━━\n👤 الطالب: ${name}\n🏛️ الفرقة: ${grade}\n✅ النتيجة: ${score} من ${questions.length}\n📊 النسبة: ${((score/questions.length)*100).toFixed(1)}%\n━━━━━━━━━━━━━━\n🚀 تم التطوير بواسطة عمر عبد التواب`;
+        sendToTelegram(resultMsg);
+
         let analysisHtml = '';
         userAnswers.forEach((ans, i) => {
             const isCorrect = (ans === questions[i].a);
-            if(isCorrect) score++;
-            analysisHtml += `<div class="result-item ${isCorrect ? 'result-correct' : 'result-wrong'}"><div style="font-weight:bold;">${i+1}. ${questions[i].q}</div><div style="font-size:13px; margin-top:5px;">${isCorrect ? '✅ صحيحة' : `❌ إجابتك: ${ans || 'لا يوجد'} | الصحيحة: ${questions[i].a}`}</div></div>`;
+            analysisHtml += `<div class="result-item ${isCorrect ? 'result-correct' : 'result-wrong'}"><div>${i+1}. ${questions[i].q}</div><div style="font-size:12px;">${isCorrect ? '✅ صحيحة' : `❌ اختيارك: ${ans} | الصحيح: ${questions[i].a}`}</div></div>`;
         });
-        
-        document.getElementById('score-display').innerText = `${score} / ${questions.length}`;
         document.getElementById('final-analysis').innerHTML = analysisHtml;
-
-        // إرسال نتيجة الاختبار النهائية
-        const resultMsg = `🏁 إنهاء اختبار الشريعة\n\n👤 الطالب: ${name}\n🏛️ الفرقة: ${grade}\n🎯 النتيجة النهائية: ${score} من ${questions.length}\n✅ النسبة: ${((score/questions.length)*100).toFixed(1)}%`;
-        sendToTelegram(resultMsg);
     }
 </script>
 </body>
