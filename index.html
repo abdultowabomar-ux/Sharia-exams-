@@ -6,6 +6,10 @@
     <title>Omar Abdel Tawab Saleh</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>منصة اختبار الشريعة | Omar Abdel Tawab</title>
+<meta name="description" content="المنصة التعليمية الرسمية لاختبارات مادة الشريعة الإسلامية، تتيح للطلاب تقييم مستواهم الأكاديمي والحصول على نتائج فورية تحت إشراف المطور عمر عبد التواب.">
+<meta name="keywords" content="شريعة، اختبارات، منصة تعليمية، عمر عبد التواب، جامعة، أسئلة وإجابات">
+
     <style>
         :root {
             --primary: #1e3a8a; 
@@ -26,25 +30,25 @@
         .dev-credit-ar { font-size: 14px; color: #64748b; font-weight: bold; margin-bottom: 5px; display: block; }
         .dev-name-en { font-size: 22px; font-weight: 800; margin-bottom: 25px; display: block; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        input { width: 100%; padding: 16px; margin: 12px 0; border: 2px solid #e2e8f0; border-radius: 15px; outline: none; box-sizing: border-box; font-family: 'Tajawal'; }
-
-        .sticky-name { font-weight: 800; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-align: center; font-size: 23px; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        input, textarea { width: 100%; padding: 16px; margin: 12px 0; border: 2px solid #e2e8f0; border-radius: 15px; outline: none; box-sizing: border-box; font-family: 'Tajawal'; font-size: 15px; }
 
         .container { flex: 1; max-width: 800px; margin: 20px auto; padding: 20px; width: 100%; box-sizing: border-box; }
         
         .quiz-card, .dev-card { 
             background: var(--white); 
-            padding: 30px; 
-            border-radius: 25px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
-            margin-bottom: 20px;
-            position: relative;
-            overflow: hidden;
+            padding: 30px; border-radius: 25px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 20px;
+            position: relative; overflow: hidden;
         }
 
         .quiz-card::before, .dev-card::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 6px; background: var(--grad); }
 
-        .progress-bar { height: 10px; background: #e2e8f0; border-radius: 20px; margin-bottom: 20px; overflow: hidden; }
+        .quiz-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #eee; }
+        .timer-box { background: #fef2f2; color: #e11d48; padding: 8px 15px; border-radius: 12px; font-weight: 800; border: 1px solid #fecaca; }
+        
+        .progress-container { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .q-counter { font-weight: bold; color: var(--primary); font-size: 14px; }
+        .progress-bar { height: 10px; background: #e2e8f0; border-radius: 20px; flex: 1; margin-right: 15px; overflow: hidden; }
         #progress-fill { height: 100%; background: var(--grad); width: 0%; transition: 0.4s; }
         
         .q-text { font-size: 20px; font-weight: 800; color: var(--primary); margin-bottom: 25px; }
@@ -54,19 +58,20 @@
         .btn-nav { flex: 1; padding: 15px; border-radius: 12px; border: none; background: var(--grad); color: white; font-weight: bold; cursor: pointer; transition: 0.3s; font-family: 'Tajawal'; }
         .nav-buttons { display: flex; gap: 15px; margin-top: 25px; }
 
-        .result-item { padding: 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid #e2e8f0; }
-        .result-correct { border-right: 5px solid #10b981; background: #f0fdf4; }
-        .result-wrong { border-right: 5px solid #e11d48; background: #fef2f2; }
+        /* تعديل زر الاقتراحات مع النص */
+        .feedback-container { position: fixed; top: 20px; left: 20px; z-index: 2000; display: flex; flex-direction: column; align-items: center; gap: 5px; }
+        .feedback-trigger { width: 45px; height: 45px; background: var(--grad); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: 0.3s; }
+        .feedback-trigger:hover { transform: scale(1.1); }
+        .feedback-label { font-size: 11px; font-weight: bold; color: var(--primary); background: rgba(255,255,255,0.8); padding: 2px 6px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
 
-        .dev-card { text-align: center; }
-        .dev-brand-footer { font-weight: 800; color: var(--primary); margin-bottom: 10px; font-size: 19px; }
+        .feedback-panel { position: fixed; top: 95px; left: 20px; width: 280px; background: white; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); padding: 20px; display: none; z-index: 2000; border: 2px solid #e2e8f0; }
+        .stars { display: flex; gap: 5px; justify-content: center; margin: 10px 0; direction: ltr; }
+        .stars i { color: #cbd5e1; cursor: pointer; font-size: 22px; transition: 0.2s; }
+        .stars i.active { color: #fbbf24; }
+
+        .dev-brand-footer { font-weight: 800; color: var(--primary); margin-bottom: 10px; font-size: 19px; text-align: center; }
         .social-row { display: flex; justify-content: center; gap: 30px; }
-        
-        .circle-link {
-            width: 55px; height: 55px; border-radius: 50%; display: flex;
-            justify-content: center; align-items: center; color: white;
-            font-size: 26px; text-decoration: none; transition: 0.3s;
-        }
+        .circle-link { width: 55px; height: 55px; border-radius: 50%; display: flex; justify-content: center; align-items: center; color: white; font-size: 26px; text-decoration: none; transition: 0.3s; }
         .wa-bg { background-color: var(--whatsapp); }
         .fb-bg { background-color: var(--facebook); }
 
@@ -74,6 +79,20 @@
     </style>
 </head>
 <body>
+
+<div class="feedback-container">
+    <div class="feedback-trigger" onclick="toggleFeedback()"><i class="fas fa-comment-dots"></i></div>
+    <span class="feedback-label">رأيك يهمنا</span>
+</div>
+
+<div class="feedback-panel" id="feedback-panel">
+    <h4 style="margin: 0 0 10px 0; color: var(--primary); text-align: center;">رأيك يهمنا 🌟</h4>
+    <textarea id="feedback-text" rows="3" placeholder="لو عندك اقتراح أو مشكلة..."></textarea>
+    <div class="stars" id="star-rating">
+        <i class="fas fa-star" data-v="5"></i><i class="fas fa-star" data-v="4"></i><i class="fas fa-star" data-v="3"></i><i class="fas fa-star" data-v="2"></i><i class="fas fa-star" data-v="1"></i>
+    </div>
+    <button class="btn-nav" style="width: 100%;" onclick="sendFeedback()">إرسال التقييم</button>
+</div>
 
 <div id="auth-screen" class="auth-overlay">
     <div class="auth-card">
@@ -90,8 +109,16 @@
 <div class="container">
     <div id="quiz-ui" style="display: none;">
         <div class="quiz-card">
-            <div class="sticky-name">Omar Abdel Tawab Saleh</div>
-            <div class="progress-bar"><div id="progress-fill"></div></div>
+            <div class="quiz-header">
+                <div style="font-weight: 800; color: var(--primary);">Omar Abdel Tawab</div>
+                <div class="timer-box" id="timer">المتبقي: 20:00</div>
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress-bar"><div id="progress-fill"></div></div>
+                <div class="q-counter" id="q-counter">سؤال 1 من 20</div>
+            </div>
+
             <div id="questions-container"></div>
 
             <div id="confirm-screen" style="display: none;">
@@ -104,14 +131,13 @@
             <div id="result-screen" style="display: none; text-align: center;">
                 <h2 style="color: var(--primary)">النتيجة النهائية</h2>
                 <div id="score-display" style="font-size: 55px; font-weight: 900; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></div>
-                <h3 style="text-align: right; color: var(--primary); margin-top: 25px;">تقرير المراجعة:</h3>
-                <div id="final-analysis" style="text-align: right;"></div>
+                <div id="final-analysis" style="text-align: right; margin-top: 20px;"></div>
                 <button class="btn-nav" style="max-width: 200px; margin-top: 30px;" onclick="location.reload()">إعادة الاختبار</button>
             </div>
 
             <div class="nav-buttons" id="nav-controls">
-                <button class="btn-nav" id="prev-btn" onclick="prevQuestion()"><i class="fas fa-arrow-right"></i> السابق</button>
-                <button class="btn-nav" id="next-btn" onclick="nextQuestion()">التالي <i class="fas fa-arrow-left"></i></button>
+                <button class="btn-nav" id="prev-btn" onclick="prevQuestion()">السابق</button>
+                <button class="btn-nav" id="next-btn" onclick="nextQuestion()">التالي</button>
             </div>
         </div>
 
@@ -156,36 +182,40 @@
 
     let currentIdx = 0;
     let userAnswers = new Array(questions.length).fill(null);
+    let timeLeft = 20 * 60; 
+    let timerInterval;
 
     function getVisitNumber() {
-        let count = localStorage.getItem('global_visit_count') || 5; 
+        let count = localStorage.getItem('global_visit_count') || 5;
         count = parseInt(count) + 1;
         localStorage.setItem('global_visit_count', count);
         return count;
     }
 
-    function sendToTelegram(msg) {
-        const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}`;
-        fetch(url).catch(e => console.error("Error:", e));
+    function startTimer() {
+        timerInterval = setInterval(() => {
+            timeLeft--;
+            let mins = Math.floor(timeLeft / 60);
+            let secs = timeLeft % 60;
+            document.getElementById('timer').innerText = `المتبقي: ${mins}:${secs < 10 ? '0'+secs : secs}`;
+            if(timeLeft <= 0) { clearInterval(timerInterval); submitFinal(); }
+        }, 1000);
     }
 
     function startQuiz() {
         const name = document.getElementById('name-input').value;
         const grade = document.getElementById('grade-input').value;
-
-        if(!name || !grade) {
-            document.getElementById('auth-err').style.display='block'; return;
-        }
+        if(!name || !grade) { document.getElementById('auth-err').style.display='block'; return; }
 
         const visitNum = getVisitNumber();
         const now = new Date().toLocaleString('ar-EG');
-
         const loginMsg = `✨ طالب جديد دخل المنصة ✨\n━━━━━━━━━━━━━━\n👤 الاسم: ${name}\n🏛️ الفرقة: ${grade}\n📊 رقم الزيارة: ${visitNum}\n🕒 التوقيت: ${now}\n━━━━━━━━━━━━━━\n🚀 تم التطوير بواسطة عمر عبد التواب`;
         
-        sendToTelegram(loginMsg);
+        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(loginMsg)}`);
 
         document.getElementById('auth-screen').style.display = 'none';
         document.getElementById('quiz-ui').style.display = 'block';
+        startTimer();
         showQuestion();
     }
 
@@ -195,9 +225,11 @@
         container.style.display = 'block';
         document.getElementById('confirm-screen').style.display = 'none';
         document.getElementById('nav-controls').style.display = 'flex';
+
         container.innerHTML = `<div class="q-text">${currentIdx + 1}. ${q.q}</div>${q.o.map(opt => `<div class="option-btn ${userAnswers[currentIdx] === opt ? 'selected' : ''}" onclick="selectOption('${opt}')">${opt}</div>`).join('')}`;
         document.getElementById('prev-btn').disabled = currentIdx === 0;
-        document.getElementById('next-btn').innerText = currentIdx === questions.length - 1 ? "مراجعة إجاباتك" : "التالي";
+        document.getElementById('next-btn').innerText = currentIdx === questions.length - 1 ? "مراجعة" : "التالي";
+        document.getElementById('q-counter').innerText = `سؤال ${currentIdx + 1} من ${questions.length}`;
         document.getElementById('progress-fill').style.width = `${((currentIdx + 1) / questions.length) * 100}%`;
     }
 
@@ -210,31 +242,41 @@
         document.getElementById('nav-controls').style.display = 'none';
         document.getElementById('confirm-screen').style.display = 'block';
         const list = document.getElementById('confirm-list');
-        list.innerHTML = userAnswers.map((ans, i) => `<div style="margin-bottom:10px; border-bottom:1px solid #eee; padding-bottom:5px;"><strong>${i+1}. ${questions[i].q}</strong><br><span style="color:var(--accent); font-size:13px;">اختيارك: ${ans || 'لم تختر'}</span></div>`).join('');
+        list.innerHTML = userAnswers.map((ans, i) => `<div style="padding:10px; border-bottom:1px solid #eee; text-align:right;"><strong>${i+1}. ${questions[i].q}</strong><br><span style="color:var(--accent)">اختيارك: ${ans || 'لم يحدد'}</span></div>`).join('');
     }
 
-    function backToQuiz() { showQuestion(); }
+    function backToQuiz() {
+        showQuestion();
+    }
 
     function submitFinal() {
-        const name = document.getElementById('name-input').value;
-        const grade = document.getElementById('grade-input').value;
-        document.getElementById('confirm-screen').style.display = 'none';
-        document.getElementById('result-screen').style.display = 'block';
-        
+        clearInterval(timerInterval);
         let score = 0;
         userAnswers.forEach((ans, i) => { if(ans === questions[i].a) score++; });
+        const name = document.getElementById('name-input').value;
+        const resultMsg = `🎯 نتيجة اختبار الطالب 🎯\n━━━━━━━━━━━━━━\n👤 الطالب: ${name}\n✅ النتيجة: ${score} من ${questions.length}`;
+        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(resultMsg)}`);
+        document.getElementById('confirm-screen').style.display = 'none';
+        document.getElementById('result-screen').style.display = 'block';
         document.getElementById('score-display').innerText = `${score} / ${questions.length}`;
-
-        const resultMsg = `🎯 نتيجة اختبار الطالب 🎯\n━━━━━━━━━━━━━━\n👤 الطالب: ${name}\n🏛️ الفرقة: ${grade}\n✅ النتيجة: ${score} من ${questions.length}\n📊 النسبة: ${((score/questions.length)*100).toFixed(1)}%\n━━━━━━━━━━━━━━\n🚀 تم التطوير بواسطة عمر عبد التواب`;
-        sendToTelegram(resultMsg);
-
-        let analysisHtml = '';
-        userAnswers.forEach((ans, i) => {
-            const isCorrect = (ans === questions[i].a);
-            analysisHtml += `<div class="result-item ${isCorrect ? 'result-correct' : 'result-wrong'}"><div>${i+1}. ${questions[i].q}</div><div style="font-size:12px;">${isCorrect ? '✅ صحيحة' : `❌ اختيارك: ${ans} | الصحيح: ${questions[i].a}`}</div></div>`;
-        });
-        document.getElementById('final-analysis').innerHTML = analysisHtml;
     }
+
+    function toggleFeedback() { const p = document.getElementById('feedback-panel'); p.style.display = p.style.display === 'block' ? 'none' : 'block'; }
+    function sendFeedback() {
+        const text = document.getElementById('feedback-text').value;
+        const name = document.getElementById('name-input').value || "زائر";
+        const msg = `🌟 تقييم جديد 🌟\n👤 الاسم: ${name}\n⭐ النجوم: ${selectedRating}\n📝 الرأي: ${text}`;
+        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}`);
+        alert("شكراً لك! تم إرسال تقييمك."); toggleFeedback();
+    }
+
+    let selectedRating = 0;
+    document.querySelectorAll('#star-rating i').forEach(star => {
+        star.onclick = function() {
+            selectedRating = this.getAttribute('data-v');
+            document.querySelectorAll('#star-rating i').forEach(s => s.classList.toggle('active', s.getAttribute('data-v') <= selectedRating));
+        }
+    });
 </script>
 </body>
 </html>
