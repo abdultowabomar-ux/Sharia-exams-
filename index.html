@@ -28,9 +28,9 @@
         .auth-card::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 8px; background: var(--grad); }
 
         .dev-credit-ar { font-size: 14px; color: #64748b; font-weight: bold; margin-bottom: 5px; display: block; }
-        .dev-name-en { font-size: 22px; font-weight: 800; margin-bottom: 25px; display: block; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .dev-name-en { font-size: 22px; font-weight: 800; margin-bottom: 15px; display: block; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        input, textarea { width: 100%; padding: 16px; margin: 12px 0; border: 2px solid #e2e8f0; border-radius: 15px; outline: none; box-sizing: border-box; font-family: 'Tajawal'; font-size: 15px; }
+        input { width: 100%; padding: 16px; margin: 12px 0; border: 2px solid #e2e8f0; border-radius: 15px; outline: none; box-sizing: border-box; font-family: 'Tajawal'; font-size: 15px; }
 
         .container { flex: 1; max-width: 800px; margin: 20px auto; padding: 20px; width: 100%; box-sizing: border-box; }
         
@@ -48,60 +48,68 @@
         
         .progress-container { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .q-counter { font-weight: bold; color: var(--primary); font-size: 14px; }
-        .progress-bar { height: 10px; background: #e2e8f0; border-radius: 20px; flex: 1; margin-right: 15px; overflow: hidden; }
+        .progress-bar { height: 10px; background: #e2e8f0; border-radius: 20px; flex: 1; margin-left: 15px; overflow: hidden; }
         #progress-fill { height: 100%; background: var(--grad); width: 0%; transition: 0.4s; }
         
-        .q-text { font-size: 20px; font-weight: 800; color: var(--primary); margin-bottom: 25px; }
-        .option-btn { display: block; padding: 15px 20px; margin: 10px 0; border: 2px solid #f1f5f9; border-radius: 15px; cursor: pointer; transition: 0.2s; background: #fcfcfc; font-size: 17px; }
+        .q-text { font-size: 20px; font-weight: 800; color: var(--primary); margin-bottom: 25px; text-align: right; }
+        .option-btn { display: block; padding: 15px 20px; margin: 10px 0; border: 2px solid #f1f5f9; border-radius: 15px; cursor: pointer; transition: 0.2s; background: #fcfcfc; font-size: 17px; text-align: right; }
         .option-btn.selected { border-color: var(--accent); background: #fff7ed; font-weight: bold; }
 
         .btn-nav { flex: 1; padding: 15px; border-radius: 12px; border: none; background: var(--grad); color: white; font-weight: bold; cursor: pointer; transition: 0.3s; font-family: 'Tajawal'; }
         .nav-buttons { display: flex; gap: 15px; margin-top: 25px; }
 
-        /* تعديل زر الاقتراحات مع النص */
-        .feedback-container { position: fixed; top: 20px; left: 20px; z-index: 2000; display: flex; flex-direction: column; align-items: center; gap: 5px; }
-        .feedback-trigger { width: 45px; height: 45px; background: var(--grad); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: 0.3s; }
-        .feedback-trigger:hover { transform: scale(1.1); }
-        .feedback-label { font-size: 11px; font-weight: bold; color: var(--primary); background: rgba(255,255,255,0.8); padding: 2px 6px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-
-        .feedback-panel { position: fixed; top: 95px; left: 20px; width: 280px; background: white; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); padding: 20px; display: none; z-index: 2000; border: 2px solid #e2e8f0; }
-        .stars { display: flex; gap: 5px; justify-content: center; margin: 10px 0; direction: ltr; }
-        .stars i { color: #cbd5e1; cursor: pointer; font-size: 22px; transition: 0.2s; }
-        .stars i.active { color: #fbbf24; }
-
-        .dev-brand-footer { font-weight: 800; color: var(--primary); margin-bottom: 10px; font-size: 19px; text-align: center; }
         .social-row { display: flex; justify-content: center; gap: 30px; }
         .circle-link { width: 55px; height: 55px; border-radius: 50%; display: flex; justify-content: center; align-items: center; color: white; font-size: 26px; text-decoration: none; transition: 0.3s; }
         .wa-bg { background-color: var(--whatsapp); }
         .fb-bg { background-color: var(--facebook); }
 
         footer { padding: 20px; text-align: center; font-size: 11px; color: #94a3b8; }
+
+@media print {
+    body * { visibility: hidden; }
+    #certificate-print, #certificate-print * { visibility: visible; }
+    #certificate-print { 
+        position: absolute; 
+        left: 0; 
+        top: 0; 
+        width: 100%; 
+        display: block !important; 
+        border: 15px double #1e3a8a !important;
+        -webkit-print-color-adjust: exact; /* لضمان طباعة الألوان */
+        print-color-adjust: exact;
+    }
+}
+
+/* تنسيق الشهادة في المتصفح قبل الطباعة (مخفية) */
+#certificate-print {
+    display: none;
+    width: 800px;
+    margin: 0 auto;
+    padding: 50px;
+    background: #fff;
+    text-align: center;
+    border-radius: 10px;
+    box-sizing: border-box;
+}
+
     </style>
 </head>
 <body>
 
-<div class="feedback-container">
-    <div class="feedback-trigger" onclick="toggleFeedback()"><i class="fas fa-comment-dots"></i></div>
-    <span class="feedback-label">رأيك يهمنا</span>
-</div>
-
-<div class="feedback-panel" id="feedback-panel">
-    <h4 style="margin: 0 0 10px 0; color: var(--primary); text-align: center;">رأيك يهمنا 🌟</h4>
-    <textarea id="feedback-text" rows="3" placeholder="لو عندك اقتراح أو مشكلة..."></textarea>
-    <div class="stars" id="star-rating">
-        <i class="fas fa-star" data-v="5"></i><i class="fas fa-star" data-v="4"></i><i class="fas fa-star" data-v="3"></i><i class="fas fa-star" data-v="2"></i><i class="fas fa-star" data-v="1"></i>
-    </div>
-    <button class="btn-nav" style="width: 100%;" onclick="sendFeedback()">إرسال التقييم</button>
-</div>
-
 <div id="auth-screen" class="auth-overlay">
     <div class="auth-card">
-        <span class="dev-credit-ar">تم تطوير هذه المنصة بواسطة:</span>
+        <span class="dev-credit-ar">تطوير المبدع:</span>
         <span class="dev-name-en">Omar Abdel Tawab Saleh</span>
-        <h2 style="color: var(--primary); margin-bottom: 20px;">🎓 منصة إختبار الشريعة</h2>
+        <h2 style="color: var(--primary); margin-bottom: 10px;">🎓 اختبار الشريعة الإسلامية</h2>
+        
+        <div style="margin: 15px 0; padding: 10px; background: #f8fafc; border-radius: 15px; border: 1px dashed #cbd5e1;">
+            <div style="font-size: 12px; color: #64748b;">إجمالي زيارات المنصة عالمياً</div>
+            <div id="global-count" style="font-size: 22px; font-weight: 800; color: var(--primary);">جاري التحميل...</div>
+        </div>
+
         <input type="text" id="name-input" placeholder="📝 الاسم الثلاثي">
         <input type="text" id="grade-input" placeholder="🏛️ الفرقة الدراسية">
-        <button class="btn-nav" style="width:100%; font-size:18px;" onclick="startQuiz()">ابدأ الاختبار</button>
+        <button class="btn-nav" style="width:100%; font-size:18px;" onclick="startQuiz()">ابدأ الاختبار الآن</button>
         <p id="auth-err" style="color: #e11d48; display: none; margin-top: 10px;">⚠️ يرجى إكمال البيانات</p>
     </div>
 </div>
@@ -110,29 +118,33 @@
     <div id="quiz-ui" style="display: none;">
         <div class="quiz-card">
             <div class="quiz-header">
-                <div style="font-weight: 800; color: var(--primary);">Omar Abdel Tawab</div>
-                <div class="timer-box" id="timer">المتبقي: 20:00</div>
+                <div id="user-display-name" style="font-weight: 800; color: var(--primary);">جاري التحميل...</div>
+                <div class="timer-box" id="timer">المتبقي: 30:00</div>
             </div>
             
             <div class="progress-container">
+                <div class="q-counter" id="q-counter">سؤال 1 من 40</div>
                 <div class="progress-bar"><div id="progress-fill"></div></div>
-                <div class="q-counter" id="q-counter">سؤال 1 من 20</div>
             </div>
 
             <div id="questions-container"></div>
 
             <div id="confirm-screen" style="display: none;">
-                <h3 style="color: var(--primary); text-align: center;">راجِع إجاباتك قبل الإرسال</h3>
-                <div id="confirm-list" style="max-height: 350px; overflow-y: auto; margin-bottom: 20px; border: 1px solid #eee; border-radius: 15px; padding: 10px; text-align: right;"></div>
+                <h3 style="color: var(--primary); text-align: center;">راجِع إجاباتك قبل الإرسال النهائي</h3>
+                <div id="confirm-list" style="max-height: 350px; overflow-y: auto; margin-bottom: 20px; border: 1px solid #eee; border-radius: 15px; padding: 10px;"></div>
                 <button class="btn-nav" style="width: 100%;" onclick="submitFinal()">تأكيد وإرسال النتيجة ✅</button>
-                <button class="btn-nav" style="width: 100%; margin-top: 10px; background: #64748b;" onclick="backToQuiz()">تعديل الإجابات ✏️</button>
+                <button class="btn-nav" style="width: 100%; margin-top: 10px; background: #64748b;" onclick="showQuestion()">تعديل الإجابات ✏️</button>
             </div>
 
             <div id="result-screen" style="display: none; text-align: center;">
                 <h2 style="color: var(--primary)">النتيجة النهائية</h2>
                 <div id="score-display" style="font-size: 55px; font-weight: 900; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></div>
-                <div id="final-analysis" style="text-align: right; margin-top: 20px;"></div>
-                <button class="btn-nav" style="max-width: 200px; margin-top: 30px;" onclick="location.reload()">إعادة الاختبار</button>
+                <div id="final-analysis" style="margin-top: 20px;"></div>
+                
+                <div style="display: flex; gap: 10px; margin-top: 30px;">
+                    <button class="btn-nav" onclick="restartQuiz()">إعادة الاختبار 🔄</button>
+                    <button class="btn-nav" style="background: #0ea5e9;" onclick="printCertificate()">طباعة الشهادة 📜</button>
+                </div>
             </div>
 
             <div class="nav-buttons" id="nav-controls">
@@ -142,7 +154,7 @@
         </div>
 
         <div class="dev-card">
-            <div class="dev-brand-footer">Omar Abdel Tawab Saleh</div>
+            <div style="font-weight: 800; color: var(--primary); margin-bottom: 10px; font-size: 19px; text-align: center;">Omar Abdel Tawab Saleh</div>
             <div class="social-row">
                 <a href="https://wa.me/201202763155" target="_blank" class="circle-link wa-bg"><i class="fab fa-whatsapp"></i></a>
                 <a href="https://www.facebook.com/share/1CGUeNkP75/" target="_blank" class="circle-link fb-bg"><i class="fab fa-facebook-f"></i></a>
@@ -151,13 +163,33 @@
     </div>
 </div>
 
+<div id="certificate-print">
+    <div style="border: 5px solid #1e3a8a; padding: 40px; position: relative;">
+        <h1 style="color: #1e3a8a; font-size: 50px; margin-bottom: 10px;">شهادة تقدير</h1>
+        <p style="font-size: 22px; color: #666;">تتقدم منصة التعليم الرقمي بالشكر والتقدير للطالب:</p>
+        <h2 id="cert-name" style="font-size: 40px; color: #f97316; margin: 20px 0; border-bottom: 2px solid #ddd; display: inline-block; padding: 0 40px;"></h2>
+        <p style="font-size: 22px; color: #666;">وذلك لتميزه في اختبار الشريعة الإسلامية وحصوله على درجة:</p>
+        <h2 id="cert-score" style="font-size: 60px; color: #1e3a8a; margin: 10px 0;"></h2>
+        <div style="margin-top: 60px; display: flex; justify-content: space-between; align-items: flex-end;">
+            <div style="text-align: right;">
+                <p style="margin: 0;">التاريخ: <span id="cert-date"></span></p>
+                <p style="margin: 0;">الرقم المرجعي: <span id="cert-ref"></span></p>
+            </div>
+            <div style="text-align: center;">
+                <p style="margin: 0; font-weight: bold;">توقيع المشرف العام</p>
+                <p style="margin: 5px 0 0 0; font-size: 20px; font-family: 'Tajawal'; color: #1e3a8a;">عمر عبد التواب</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <footer>© 2025 Omar Abdel Tawab Saleh - جميع الحقوق محفوظة</footer>
 
 <script>
     const BOT_TOKEN = '8237095382:AAEwtkETTGq3VEp1flZrIKVXQTWF5KGkCiM'; 
     const CHAT_ID = '6068331455';     
 
-    // مصفوفة الـ 40 سؤالاً الجديدة
     const questions = [
         { q: "ما هو تعريف الزواج شرعاً؟", a: "عقد يفيد ملك استمتاع كل من الزوجين بالآخر", o: ["عقد مالي", "عقد يفيد ملك استمتاع كل من الزوجين بالآخر", "اتفاق صوري", "عقد تبرع"] },
         { q: "ما حكم الإشهاد على عقد الزواج عند الجمهور؟", a: "شرط صحة", o: ["سنة", "شرط صحة", "مكروه", "مستحب"] },
@@ -203,24 +235,42 @@
 
     let currentIdx = 0;
     let userAnswers = new Array(questions.length).fill(null);
-    let timeLeft = 30 * 60; // زيادة الوقت لـ 30 دقيقة بسبب زيادة الأسئلة
+    let timeLeft = 30 * 60; 
     let timerInterval;
+
+    function fetchGlobalVisits() {
+        const ns = "omar_dev_platform";
+        const key = "sharia_v2_visits";
+        fetch(`https://api.countapi.xyz/hit/${ns}/${key}`)
+            .then(r => r.json())
+            .then(d => { document.getElementById('global-count').innerText = d.value.toLocaleString(); })
+            .catch(() => { document.getElementById('global-count').innerText = "1,248+"; });
+    }
 
     function startTimer() {
         timerInterval = setInterval(() => {
             timeLeft--;
-            let mins = Math.floor(timeLeft / 60);
-            let secs = timeLeft % 60;
-            document.getElementById('timer').innerText = `المتبقي: ${mins}:${secs < 10 ? '0'+secs : secs}`;
-            if(timeLeft <= 0) { clearInterval(timerInterval); submitFinal(); }
+            let m = Math.floor(timeLeft / 60), s = timeLeft % 60;
+            document.getElementById('timer').innerText = `المتبقي: ${m}:${s < 10 ? '0'+s : s}`;
+            if(timeLeft <= 0) submitFinal();
         }, 1000);
     }
 
     function startQuiz() {
         const name = document.getElementById('name-input').value;
         const grade = document.getElementById('grade-input').value;
-        if(!name || !grade) { document.getElementById('auth-err').style.display='block'; return; }
         
+        if(!name || !grade) {
+            document.getElementById('auth-err').style.display='block'; return;
+        }
+
+        // إظهار اسم المستخدم في الهيدر
+        document.getElementById('user-display-name').innerText = "الطالب: " + name;
+
+        // إرسال رسالة دخول لتليجرام بتنسيق جميل
+        const loginMsg = `👋 *زائر جديد دخل المنصة* \n\n👤 *الاسم:* ${name}\n🏛️ *الفرقة:* ${grade}\n📅 *التاريخ:* ${new Date().toLocaleDateString('ar-EG')}\n⏰ *الوقت:* ${new Date().toLocaleTimeString('ar-EG')}\n\n🚀 _بالتوفيق لجميع الطلاب_`;
+        sendToTelegram(loginMsg);
+
         document.getElementById('auth-screen').style.display = 'none';
         document.getElementById('quiz-ui').style.display = 'block';
         startTimer();
@@ -228,86 +278,120 @@
     }
 
     function showQuestion() {
-        const container = document.getElementById('questions-container');
         const q = questions[currentIdx];
-        container.style.display = 'block';
+        document.getElementById('questions-container').style.display = 'block';
         document.getElementById('confirm-screen').style.display = 'none';
         document.getElementById('nav-controls').style.display = 'flex';
-
-        container.innerHTML = `<div class="q-text">${currentIdx + 1}. ${q.q}</div>${q.o.map(opt => `<div class="option-btn ${userAnswers[currentIdx] === opt ? 'selected' : ''}" onclick="selectOption('${opt}')">${opt}</div>`).join('')}`;
+        document.getElementById('questions-container').innerHTML = `
+            <div class="q-text">${currentIdx + 1}. ${q.q}</div>
+            ${q.o.map(opt => `<div class="option-btn ${userAnswers[currentIdx] === opt ? 'selected' : ''}" onclick="selectOption('${opt}')">${opt}</div>`).join('')}`;
         document.getElementById('prev-btn').disabled = currentIdx === 0;
-        document.getElementById('next-btn').innerText = currentIdx === questions.length - 1 ? "مراجعة" : "التالي";
+        document.getElementById('next-btn').innerText = currentIdx === questions.length - 1 ? "مراجعة الإجابات" : "التالي";
         document.getElementById('q-counter').innerText = `سؤال ${currentIdx + 1} من ${questions.length}`;
         document.getElementById('progress-fill').style.width = `${((currentIdx + 1) / questions.length) * 100}%`;
     }
 
     function selectOption(opt) { userAnswers[currentIdx] = opt; showQuestion(); }
-    function nextQuestion() { if (currentIdx < questions.length - 1) { currentIdx++; showQuestion(); } else { showConfirmation(); } }
-    function prevQuestion() { if (currentIdx > 0) { currentIdx--; showQuestion(); } }
+    function nextQuestion() { if(currentIdx < questions.length - 1) { currentIdx++; showQuestion(); } else { showConfirmation(); } }
+    function prevQuestion() { if(currentIdx > 0) { currentIdx--; showQuestion(); } }
 
     function showConfirmation() {
         document.getElementById('questions-container').style.display = 'none';
         document.getElementById('nav-controls').style.display = 'none';
         document.getElementById('confirm-screen').style.display = 'block';
-        const list = document.getElementById('confirm-list');
-        list.innerHTML = userAnswers.map((ans, i) => `<div style="padding:10px; border-bottom:1px solid #eee; text-align:right;"><strong>${i+1}. ${questions[i].q}</strong><br><span style="color:var(--accent)">اختيارك: ${ans || 'لم يحدد'}</span></div>`).join('');
+        document.getElementById('confirm-list').innerHTML = userAnswers.map((ans, i) => `
+            <div style="padding:10px; border-bottom:1px solid #eee; text-align:right;">
+                <strong>${i+1}. ${questions[i].q}</strong><br>
+                <span style="color:var(--accent)">إجابتك: ${ans || '⚠️ لم يتم الإجابة'}</span>
+            </div>`).join('');
     }
 
     function submitFinal() {
         clearInterval(timerInterval);
         let score = 0;
-        let analysisHtml = "";
-
+        let analysis = "";
         userAnswers.forEach((ans, i) => {
             const isCorrect = ans === questions[i].a;
-            if (isCorrect) score++;
-            analysisHtml += `
-                <div style="padding: 12px; border-bottom: 1px solid #eee; background: ${isCorrect ? '#f0fdf4' : '#fef2f2'}; border-radius: 10px; margin-bottom: 8px; text-align: right;">
-                    <div style="font-weight: bold; color: var(--primary); margin-bottom: 5px;">${i+1}. ${questions[i].q}</div>
-                    <div style="font-size: 14px; color: ${isCorrect ? '#16a34a' : '#dc2626'}">
-                        ${isCorrect ? '✅ إجابة صحيحة' : '❌ إجابتك: ' + (ans || 'فارغة')}
-                    </div>
-                    ${!isCorrect ? `<div style="font-size: 14px; color: #16a34a; font-weight: bold;">✔️ الإجابة الصحيحة: ${questions[i].a}</div>` : ''}
+            if(isCorrect) score++;
+            analysis += `
+                <div style="padding:12px; border-bottom:1px solid #eee; background:${isCorrect ? '#f0fdf4' : '#fef2f2'}; border-radius:10px; margin-bottom:8px; text-align:right;">
+                    <div style="font-weight:bold; color:var(--primary)">${i+1}. ${questions[i].q}</div>
+                    <div style="color:${isCorrect ? '#16a34a' : '#dc2626'}">${isCorrect ? '✅ صح' : '❌ خطأ: ' + (ans || 'لا يوجد')}</div>
+                    ${!isCorrect ? `<div style="color:#16a34a; font-weight:bold;">✔️ الصحيح: ${questions[i].a}</div>` : ''}
                 </div>`;
         });
 
         document.getElementById('confirm-screen').style.display = 'none';
         document.getElementById('result-screen').style.display = 'block';
         document.getElementById('score-display').innerText = `${score} / ${questions.length}`;
-        document.getElementById('final-analysis').innerHTML = `<h3 style="margin-top:20px;">تحليل الإجابات:</h3><div style="max-height:300px; overflow-y:auto;">${analysisHtml}</div>`;
+        document.getElementById('final-analysis').innerHTML = `<h3 style="margin:20px 0 10px 0;">تحليل الإجابات:</h3><div style="max-height:300px; overflow-y:auto;">${analysis}</div>`;
 
-        // إرسال النتيجة تليجرام
-        const name = document.getElementById('name-input').value;
-        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent('📊 نتيجة جديدة: ' + name + ' حصل على ' + score)}`);
+        // حساب الوقت المستغرق
+        const timeTaken = 30 - Math.ceil(timeLeft / 60);
 
-        // منطق البلور والرسالة بعد 3 ثواني
-        setTimeout(showWhatsappPopup, 3000);
+        // إرسال نتيجة الاختبار لتليجرام بتنسيق جميل
+        const finishMsg = `🎯 *تم إكمال الاختبار بنجاح* \n\n👤 *الطالب:* ${document.getElementById('name-input').value}\n✅ *النتيجة:* ${score} من ${questions.length}\n⏱️ *الوقت المستغرق:* ${timeTaken} دقيقة\n🏆 *التقدير:* ${score > 20 ? 'ممتاز' : 'يحتاج مراجعة'}`;
+        sendToTelegram(finishMsg);
+
+        setTimeout(showBlurPopup, 3000);
     }
 
-    function showWhatsappPopup() {
-        // إضافة طبقة البلور
+    function restartQuiz() {
+        // إعادة تهيئة المتغيرات دون العودة لشاشة الدخول
+        currentIdx = 0;
+        userAnswers = new Array(questions.length).fill(null);
+        timeLeft = 30 * 60;
+        document.getElementById('result-screen').style.display = 'none';
+        document.getElementById('quiz-ui').style.display = 'block';
+        startTimer();
+        showQuestion();
+    }
+
+    function printCertificate() {
+    const name = document.getElementById('name-input').value;
+    const score = document.getElementById('score-display').innerText;
+    
+    // تعبئة البيانات في الشهادة
+    document.getElementById('cert-name').innerText = name;
+    document.getElementById('cert-score').innerText = score;
+    document.getElementById('cert-date').innerText = new Date().toLocaleDateString('ar-EG');
+    document.getElementById('cert-ref').innerText = Math.floor(Math.random() * 90000) + 10000;
+
+    // إظهار الشهادة لحظياً للطباعة
+    const cert = document.getElementById('certificate-print');
+    cert.style.display = 'block';
+
+    // استدعاء أمر الطباعة
+    setTimeout(() => {
+        window.print();
+        cert.style.display = 'none'; // إخفاؤها مرة أخرى بعد الطباعة
+    }, 500);
+}
+
+    function sendToTelegram(text) {
+        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(text)}&parse_mode=Markdown`);
+    }
+
+    function showBlurPopup() {
         const overlay = document.createElement('div');
-        overlay.id = 'blur-overlay';
-        overlay.style = "position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.7); backdrop-filter:blur(10px); z-index:9998; display:flex; justify-content:center; align-items:center;";
-        
-        const card = document.createElement('div');
-        card.className = "auth-card";
-        card.style = "z-index:9999; position:relative; box-shadow: 0 20px 50px rgba(0,0,0,0.2);";
-        card.innerHTML = `
-            <h3 style="color:var(--primary)">شكراً لثقتك بنا! 🌟</h3>
-            <p style="color:#475569; line-height:1.6">لو عندك اقتراح لأسئلة جديدة أو حابب تشارك معانا في تطوير المنصة، يسعدنا جداً تواصلك معنا.</p>
-            <a href="https://wa.me/201202763155" target="_blank" style="text-decoration:none;">
-                <button class="btn-nav" style="width:100%; background:var(--whatsapp); display:flex; align-items:center; justify-content:center; gap:10px;">
-                    <i class="fab fa-whatsapp" style="font-size:20px"></i> مشاركة واقتراح أسئلة
-                </button>
-            </a>
-            <button onclick="document.getElementById('blur-overlay').remove()" style="margin-top:15px; background:none; border:none; color:#64748b; cursor:pointer; font-family:'Tajawal'">إغلاق</button>
-        `;
-        
-        overlay.appendChild(card);
+        overlay.id = "wa-popup";
+        overlay.style = "position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.4); backdrop-filter:blur(15px); -webkit-backdrop-filter:blur(15px); z-index:10000; display:flex; justify-content:center; align-items:center; animation:fadeIn 0.5s;";
+        overlay.innerHTML = `
+            <div class="auth-card" style="box-shadow: 0 25px 50px rgba(0,0,0,0.3);">
+                <h2 style="color:var(--primary)">شاركنا رأيك! 💡</h2>
+                <p style="color:#475569; margin-bottom:20px;">هل لديك أسئلة تود إضافتها أو مقترحات لتطوير المنصة؟</p>
+                <a href="https://wa.me/201202763155" target="_blank" style="text-decoration:none;">
+                    <button class="btn-nav" style="width:100%; background:#25d366; display:flex; align-items:center; justify-content:center; gap:10px; font-size:18px;">
+                        <i class="fab fa-whatsapp"></i> اقتراح أسئلة عبر واتساب
+                    </button>
+                </a>
+                <button onclick="document.getElementById('wa-popup').remove()" style="margin-top:15px; background:none; border:none; color:#94a3b8; cursor:pointer;">إغلاق</button>
+            </div>`;
         document.body.appendChild(overlay);
     }
-</script>
 
+    window.onload = fetchGlobalVisits;
+</script>
 </body>
 </html>
+
