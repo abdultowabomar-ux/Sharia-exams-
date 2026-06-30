@@ -1,612 +1,714 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة الاقتصاد | Omar Abdel Tawab</title>
-    <meta name="description" content="المنصة التعليمية الرسمية لاختبارات وشروحات مادة الاقتصاد، تتيح للطلاب التميز الأكاديمي تحت إشراف  عمر عبد التواب.">
-    
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🎬 مشغل فيديو متطور</title>
     <style>
+        /* --------------------- المتغيرات العامة --------------------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         :root {
-            --primary: #1e3a8a; 
-            --accent: #f97316;  
-            --whatsapp: #25d366; 
-            --facebook: #1877f2;
-            --bg: #f0f4f8;
-            --white: #ffffff;
-            --grad: linear-gradient(45deg, #1e3a8a, #f97316);
+            --bg-primary: #0b0e14;
+            --bg-card: #161b24;
+            --bg-controls: #1f2937;
+            --accent: #00e676;
+            --accent-dark: #00c853;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --border-color: #334155;
+            --shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            --radius: 16px;
+            --transition: 0.25s ease;
         }
 
-        body { font-family: 'Tajawal', sans-serif; background-color: var(--bg); margin: 0; display: flex; flex-direction: column; min-height: 100vh; }
-
-        /* شاشة الدخول */
-        .auth-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at center, #3b82f6, #1e3a8a); display: flex; justify-content: center; align-items: center; z-index: 2000; }
-        .auth-card { background: var(--white); padding: 40px; border-radius: 30px; width: 90%; max-width: 440px; text-align: center; box-shadow: 0 30px 60px rgba(0,0,0,0.4); position: relative; overflow: hidden; }
-        .auth-card::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 8px; background: var(--grad); }
-
-        .dev-credit-ar { font-size: 14px; color: #64748b; font-weight: bold; margin-bottom: 5px; display: block; }
-        .dev-name-en { font-size: 22px; font-weight: 800; margin-bottom: 15px; display: block; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-
-        input { width: 100%; padding: 16px; margin: 12px 0; border: 2px solid #e2e8f0; border-radius: 15px; outline: none; box-sizing: border-box; font-family: 'Tajawal'; font-size: 15px; transition: 0.3s; }
-        input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(30, 58, 138, 0.1); }
-
-        /* الحاويات والبطاقات */
-        .container { flex: 1; max-width: 800px; margin: 20px auto; padding: 20px; width: 100%; box-sizing: border-box; }
-        
-        .quiz-card, .dev-card, .lesson-card { 
-            background: var(--white); 
-            padding: 30px; border-radius: 25px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 20px;
-            position: relative; overflow: hidden;
-        }
-
-        /* تنسيق بطاقات الشرح والأسئلة */
-        .quiz-card::before, .dev-card::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 6px; background: var(--grad); }
-
-        .lesson-card {
-            border-right: 8px solid var(--primary);
-            background: linear-gradient(to left, #ffffff, #f8faff);
-            transition: 0.3s;
-            padding: 20px;
-        }
-        .lesson-card:hover { transform: scale(1.01); box-shadow: 0 15px 35px rgba(30, 58, 138, 0.1); }
-        .lesson-title { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; font-weight: 800; color: var(--primary); font-size: 18px; }
-        .lesson-title i { color: var(--accent); font-size: 22px; }
-        .lesson-content { line-height: 1.8; color: #334155; font-size: 16px; text-align: right; }
-
-        /* عناصر الاختبار */
-        .quiz-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #eee; }
-        .timer-box { background: #fef2f2; color: #e11d48; padding: 8px 15px; border-radius: 12px; font-weight: 800; border: 1px solid #fecaca; }
-        
-        .progress-container { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .q-counter { font-weight: bold; color: var(--primary); font-size: 14px; }
-        .progress-bar { height: 10px; background: #e2e8f0; border-radius: 20px; flex: 1; margin-left: 15px; overflow: hidden; }
-        #progress-fill { height: 100%; background: var(--grad); width: 0%; transition: 0.4s; }
-        
-        .q-text { font-size: 20px; font-weight: 800; color: var(--primary); margin-bottom: 25px; text-align: right; }
-        .option-btn { display: block; padding: 15px 20px; margin: 10px 0; border: 2px solid #f1f5f9; border-radius: 15px; cursor: pointer; transition: 0.2s; background: #fcfcfc; font-size: 17px; text-align: right; }
-        .option-btn.selected { border-color: var(--accent); background: #fff7ed; font-weight: bold; }
-
-        /* الأزرار العامة */
-        .btn-nav { width: 100%; padding: 15px; border-radius: 15px; border: none; background: var(--grad); color: white; font-weight: bold; cursor: pointer; transition: 0.3s; font-family: 'Tajawal'; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 16px; margin-top: 10px; }
-        .btn-nav:hover { filter: brightness(1.1); transform: translateY(-2px); }
-        .nav-buttons { display: flex; gap: 15px; margin-top: 25px; }
-        .btn-nav.secondary { background: #64748b; } /* زر رمادي */
-
-        /* القائمة الرئيسية */
-        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
-        .menu-item { background: var(--white); padding: 30px; border-radius: 20px; text-align: center; cursor: pointer; transition: 0.3s; border: 2px solid transparent; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
-        .menu-item:hover { border-color: var(--accent); transform: translateY(-5px); }
-        .menu-item i { font-size: 40px; margin-bottom: 15px; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-
-        /* زر العودة المخصص (أزرق مع شريط برتقالي) */
-        .back-btn-custom {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 15px 25px;
-            border-radius: 15px;
-            font-family: 'Tajawal', sans-serif;
-            font-weight: bold;
-            font-size: 16px;
-            cursor: pointer;
+        body {
+            background: var(--bg-primary);
             display: flex;
-            align-items: center;
             justify-content: center;
-            gap: 10px;
-            margin: 20px auto;
-            width: 100%;
-            transition: 0.3s;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(30, 58, 138, 0.2);
+            align-items: center;
+            min-height: 100vh;
+            padding: 16px;
+            font-family: 'Segoe UI', 'Tahoma', system-ui, sans-serif;
+            color: var(--text-primary);
+            margin: 0;
         }
-        /* الشريط المتدرج فوق الزر */
-        .back-btn-custom::before {
-            content: "";
+
+        /* --------------------- الحاوية الرئيسية --------------------- */
+        .container {
+            width: 100%;
+            max-width: 860px;
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 20px 20px 18px;
+            transition: var(--transition);
+            border: 1px solid var(--border-color);
+        }
+
+        /* --------------------- حاوية الفيديو --------------------- */
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform-origin: center center;
+            cursor: pointer;
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+        }
+
+        #player {
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* نمنع التفاعل المباشر مع iframe */
+        }
+
+        /* طبقة شفافة فوق الفيديو لالتقاط النقرات */
+        .overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
+            height: 100%;
+            z-index: 10;
+            pointer-events: none; /* تسمح بالنقر من خلالها */
+        }
+
+        /* --------------------- شريط التحميل (Loading) --------------------- */
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 20;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s;
+            border-radius: 12px;
+        }
+        .loading-overlay.active {
+            opacity: 1;
+        }
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 255, 255, 0.1);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* --------------------- شريط التحكم السفلي (تحت الفيديو) --------------------- */
+        .controls-container {
+            margin-top: 16px;
+            background: var(--bg-controls);
+            border-radius: 12px;
+            padding: 12px 14px 14px;
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+        }
+
+        /* شريط التقدم */
+        .progress-bar-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+        .time-display {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            min-width: 46px;
+            letter-spacing: 0.3px;
+            font-variant-numeric: tabular-nums;
+        }
+        .progress-track {
+            flex: 1;
             height: 5px;
-            background: var(--grad);
+            background: #374151;
+            border-radius: 10px;
+            position: relative;
+            cursor: pointer;
+            transition: height 0.2s;
         }
-        .back-btn-custom:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(30, 58, 138, 0.3); }
-
-        /* صندوق النتائج القابل للتمرير */
-        #final-analysis {
-            max-height: 350px; /* ارتفاع ثابت */
-            overflow-y: auto;  /* تفعيل السكرول */
-            background: #f8fafc;
-            border: 2px solid #e2e8f0;
-            border-radius: 15px;
-            padding: 15px;
-            margin-top: 20px;
-            text-align: right;
+        .progress-track:hover { height: 7px; }
+        .progress-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-dark), var(--accent));
+            border-radius: 10px;
+            transition: width 0.05s linear;
+            position: relative;
         }
-        /* تنسيق السكرول بار */
-        #final-analysis::-webkit-scrollbar { width: 8px; }
-        #final-analysis::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
-        #final-analysis::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        #final-analysis::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-
-        /* التواصل الاجتماعي والتذييل */
-        .social-row { display: flex; justify-content: center; gap: 30px; }
-        .circle-link { width: 55px; height: 55px; border-radius: 50%; display: flex; justify-content: center; align-items: center; color: white; font-size: 26px; text-decoration: none; transition: 0.3s; }
-        .wa-bg { background-color: var(--whatsapp); }
-        .fb-bg { background-color: var(--facebook); }
-
-        footer { padding: 20px; text-align: center; font-size: 11px; color: #94a3b8; }
-
-        /* الشهادة */
-        @media print {
-            body * { visibility: hidden; }
-            #certificate-print, #certificate-print * { visibility: visible; }
-            #certificate-print { position: absolute; left: 0; top: 0; width: 100%; display: block !important; border: 15px double #1e3a8a !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        /* نقطة السحب (thumb) */
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            right: -6px;
+            top: -4px;
+            width: 14px;
+            height: 14px;
+            background: var(--accent);
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.2s;
+            box-shadow: 0 0 8px rgba(0, 230, 118, 0.5);
         }
-        #certificate-print { display: none; width: 800px; margin: 0 auto; padding: 50px; background: #fff; text-align: center; border-radius: 10px; box-sizing: border-box; }
+        .progress-track:hover .progress-fill::after { opacity: 1; }
 
-        /* زر الملاحظات العائم */
-        #feedback-button { position: fixed; : 20px; left: 20px; width: 60px; height: 60px; background: var(--grad); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 1500; font-size: 24px; transition: transform 0.3s; }
-        #feedback-button:hover { transform: scale(1.1); }
+        /* صف الأزرار الرئيسية */
+        .controls-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 6px 10px;
+        }
+        .controls-row button {
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            padding: 6px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 500;
+            min-width: 44px;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid transparent;
+        }
+        .controls-row button:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--border-color);
+            color: var(--accent);
+        }
+        .controls-row button:active { transform: scale(0.94); }
+        .controls-row .active-btn {
+            background: var(--accent);
+            color: #000;
+            border-color: var(--accent);
+        }
+        .controls-row .active-btn:hover {
+            background: var(--accent-dark);
+            color: #000;
+        }
 
-        #feedback-panel { position: fixed; bottom: 90px; left: 20px; width: 300px; background: white; padding: 20px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); display: none; z-index: 1500; text-align: right; }
-        #feedback-panel textarea { width: 100%; height: 80px; margin: 10px 0; padding: 10px; border-radius: 10px; border: 1px solid #ddd; font-family: 'Tajawal'; box-sizing: border-box; }
+        /* زر الصوت - شريط جانبي */
+        .volume-wrap {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-right: 4px;
+        }
+        .volume-slider {
+            width: 60px;
+            height: 4px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: #374151;
+            border-radius: 10px;
+            outline: none;
+            transition: 0.2s;
+        }
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--accent);
+            cursor: pointer;
+            box-shadow: 0 0 6px rgba(0, 230, 118, 0.3);
+        }
+        .volume-slider::-moz-range-thumb {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--accent);
+            cursor: pointer;
+            border: none;
+        }
 
+        /* --------------------- الإشعارات (Toasts) --------------------- */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            pointer-events: none;
+        }
+        .toast {
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            color: #fff;
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            border: 1px solid var(--accent);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transform: translateY(-20px) scale(0.95);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            pointer-events: none;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        /* --------------------- التوافق مع الشاشات الصغيرة --------------------- */
+        @media (max-width: 600px) {
+            .container { padding: 12px; }
+            .controls-container { padding: 10px; }
+            .controls-row { gap: 4px; }
+            .controls-row button {
+                font-size: 0.9rem;
+                padding: 4px 8px;
+                min-width: 36px;
+            }
+            .volume-slider { width: 40px; }
+            .time-display { font-size: 0.7rem; min-width: 36px; }
+            .toast { font-size: 0.8rem; padding: 6px 16px; }
+        }
     </style>
 </head>
 <body>
 
-<div id="auth-screen" class="auth-overlay">
-    <div class="auth-card">
-        <span class="dev-credit-ar">تم تطوير المنصة بواسطة  :</span>
-        <span class="dev-name-en">Omar Abdel Tawab Saleh</span>
-        <h2 style="color: var(--primary); margin-bottom: 10px;">📊 منصة الاقتصاد الرقمية</h2>
-        
-        <div style="margin: 15px 0; padding: 10px; background: #f8fafc; border-radius: 15px; border: 1px dashed #cbd5e1;">
-            <div style="font-size: 12px; color: #64748b;">إجمالي زيارات المنصة</div>
-            <div id="global-count" style="font-size: 22px; font-weight: 800; color: var(--primary);">جاري التحميل...</div>
+    <!-- حاوية الإشعارات -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- الحاوية الرئيسية -->
+    <div class="container">
+        <!-- حاوية الفيديو -->
+        <div class="video-wrapper" id="wrapper">
+            <div class="overlay" id="videoOverlay"></div>
+            <div id="player"></div>
+            <div class="loading-overlay" id="loadingOverlay">
+                <div class="spinner"></div>
+            </div>
         </div>
 
-        <input type="text" id="name-input" placeholder="📝 الاسم الثلاثي">
-        <input type="text" id="grade-input" placeholder="🏛️ الفرقة الدراسية">
-        <button class="btn-nav" style="font-size:18px;" onclick="handleLogin()">دخول المنصة <i class="fas fa-sign-in-alt"></i></button>
-        <p id="auth-err" style="color: #e11d48; display: none; margin-top: 10px;">⚠️ يرجى إكمال جميع البيانات</p>
-    </div>
-</div>
-
-<div class="container">
-    <div id="main-menu" style="display: none;">
-        <div class="quiz-card" style="text-align: center;">
-            <h2 style="color: var(--primary);">مرحباً بك في قسم الاقتصاد 🏛️</h2>
-            <p style="color: #64748b;">اختر المسار الذي ترغب في البدء به</p>
-            <div class="menu-grid">
-                <div class="menu-item" onclick="showSection('explanation')">
-                    <i class="fas fa-book-open"></i>
-                    <h3>قسم الشرح</h3>
-                    <p style="font-size: 12px;">ملخصات المادة</p>
+        <!-- لوحة التحكم -->
+        <div class="controls-container">
+            <!-- شريط التقدم + الوقت -->
+            <div class="progress-bar-wrapper">
+                <span class="time-display" id="currentTime">00:00</span>
+                <div class="progress-track" id="progressTrack">
+                    <div class="progress-fill" id="progressFill"></div>
                 </div>
-                <div class="menu-item" onclick="showSection('quiz')">
-                    <i class="fas fa-vial"></i>
-                    <h3>الاختبارات</h3>
-                    <p style="font-size: 12px;">مستوى متقدم</p>
+                <span class="time-display" id="totalTime">00:00</span>
+            </div>
+
+            <!-- صف الأزرار -->
+            <div class="controls-row">
+                <!-- تشغيل / إيقاف -->
+                <button id="playBtn" title="تشغيل/إيقاف (Space)">▶</button>
+
+                <!-- تقديم / تأخير 5 ثوانٍ -->
+                <button id="rewindBtn" title="رجوع 5 ثوانٍ (←)">⏪</button>
+                <button id="forwardBtn" title="تقديم 5 ثوانٍ (→)">⏩</button>
+
+                <!-- سرعة -->
+                <button id="speedBtn" title="تغيير السرعة">1.0×</button>
+
+                <!-- الصوت -->
+                <div class="volume-wrap">
+                    <button id="muteBtn" title="كتم/رفع الصوت (M)">🔊</button>
+                    <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="100" />
                 </div>
+
+                <!-- زوم -->
+                <button id="zoomInBtn" title="تكبير">🔍+</button>
+                <button id="zoomOutBtn" title="تصغير">🔍−</button>
+                <button id="resetZoomBtn" title="إعادة تعيين الزوم">⟲</button>
+
+                <!-- ملء الشاشة -->
+                <button id="fullscreenBtn" title="ملء الشاشة (F)">⛶</button>
             </div>
         </div>
     </div>
 
-    <<div id="explanation-section" style="display: none;">
-    
-    <div class="lesson-card" style="border-right-width: 10px;">
-        <div class="lesson-title" style="font-size: 22px;">
-            <i class="fas fa-globe-americas"></i>
-            <span>الوحدة الأولى: ماهية التجارة الخارجية وعواملها</span>
-        </div>
-        <div class="lesson-content">
-            <div style="background: #f8fafc; padding: 15px; border-radius: 12px; margin-bottom: 15px; border-right: 4px solid var(--primary);">
-                <p><b>🔹 التجارة الخارجية:</b> المبادلات من وجهة نظر <b>وطنية</b> (دولة واحدة مع العالم)، وتتضمن انتقال السلع والخدمات عبر الحدود.</p>
-                <p><b>🔹 التجارة الدولية:</b> المبادلات من وجهة نظر <b>عالمية</b> (مجموع المبادلات بين كل دول المجتمع الدولي).</p>
-            </div>
-            
-            <h3 style="color: var(--primary); font-size: 18px;"><i class="fas fa-chart-line"></i> العوامل المؤثرة على حجم التجارة:</h3>
-            <ul style="list-style: none; padding-right: 0;">
-                <li style="margin-bottom: 10px; background: #fff; padding: 10px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
-                    <i class="fas fa-wallet" style="color: var(--accent);"></i> <b>الدخل القومي:</b> المحرك الأساسي؛ زيادته تعني زيادة الاستيراد.
-                </li>
-                <li style="margin-bottom: 10px; background: #fff; padding: 10px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
-                    <i class="fas fa-tags" style="color: var(--accent);"></i> <b>الأسعار النسبية:</b> انخفاض الأسعار المحلية يشجع التصدير.
-                </li>
-                <li style="margin-bottom: 10px; background: #fff; padding: 10px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
-                    <i class="fas fa-truck-moving" style="color: var(--accent);"></i> <b>تكاليف النقل:</b> كلما انخفضت التكاليف، زاد حجم التبادل.
-                </li>
-            </ul>
-        </div>
-    </div>
+    <!-- تحميل API اليوتيوب -->
+    <script src="https://www.youtube.com/iframe_api"></script>
 
-    <div class="lesson-card" style="border-right-width: 10px; border-right-color: #dc2626;">
-        <div class="lesson-title" style="font-size: 22px; color: #dc2626;">
-            <i class="fas fa-balance-scale"></i>
-            <span>الوحدة الثانية: حرية التجارة (مؤيد ومعارض)</span>
-        </div>
-        <div class="lesson-content">
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
-                <div style="background: #f0fff4; padding: 15px; border-radius: 12px; border: 1px solid #bbf7d0;">
-                    <h4 style="color: #16a34a; margin-top: 0;">✅ المؤيدون للحرية</h4>
-                    <p style="font-size: 14px;">نقل التكنولوجيا، المنافسة، وتوفير سلع لا يمكن إنتاجها محلياً.</p>
-                </div>
-                <div style="background: #fef2f2; padding: 15px; border-radius: 12px; border: 1px solid #fecaca;">
-                    <h4 style="color: #dc2626; margin-top: 0;">❌ المعارضون (الحمائية)</h4>
-                    <p style="font-size: 14px;">حماية الصناعة الوليدة، الأمن القومي، ومحاربة البطالة.</p>
-                </div>
-            </div>
-            <div style="background: #fff; padding: 15px; border-radius: 12px; border: 1px dashed #cbd5e1;">
-                <p><b>🛡️ الصناعة الوليدة:</b> منح المصانع الناشئة "فترة سماح" للنمو بعيداً عن منافسة الشركات العالمية.</p>
-            </div>
-        </div>
-    </div>
+    <script>
+        // ================================================================
+        //  1.  إدارة الحالة العامة
+        // ================================================================
+        const state = {
+            player: null,
+            isPlaying: false,
+            currentVolume: 100,
+            isMuted: false,
+            playbackRate: 1,
+            zoomLevel: 1,
+            duration: 0,
+            currentTime: 0,
+            isFullscreen: false,
+            isReady: false,
+        };
 
-    <div class="lesson-card" style="border-right-width: 10px; border-right-color: #f59e0b;">
-        <div class="lesson-title" style="font-size: 22px; color: #f59e0b;">
-            <i class="fas fa-file-invoice-dollar"></i>
-            <span>الوحدة الثالثة: السياسات الجمركية والاستراتيجيات</span>
-        </div>
-        <div class="lesson-content">
-            <h3 style="color: #b45309; font-size: 18px;">📋 استراتيجيات التنمية:</h3>
-            <p><b>🔄 إحلال الواردات:</b> تصنيع ما نستورده محلياً لتحقيق الاستقلال.</p>
-            <p><b>🌍 التصنيع للتصدير:</b> التوجه للأسواق العالمية (تجربة النمور الآسيوية).</p>
-            
-            <hr style="border: 0.5px solid #eee; margin: 15px 0;">
-            
-            <h3 style="color: #b45309; font-size: 18px;">📜 أنواع التعريفة الجمركية:</h3>
-            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                <span style="background: #fef3c7; padding: 5px 15px; border-radius: 20px; font-weight: bold;">قيمية (نسبة)</span>
-                <span style="background: #fef3c7; padding: 5px 15px; border-radius: 20px; font-weight: bold;">نوعية (مبلغ ثابت)</span>
-                <span style="background: #fef3c7; padding: 5px 15px; border-radius: 20px; font-weight: bold;">مركبة (الاثنين معاً)</span>
-            </div>
-            <p style="margin-top: 15px;"><b>🚛 الترانزيت:</b> مرور البضائع عبر الدولة لدولة أخرى دون جمارك لإنعاش الموانئ.</p>
-        </div>
-    </div>
+        // ================================================================
+        //  2.  عناصر DOM
+        // ================================================================
+        const $ = id => document.getElementById(id);
+        const wrapper = $('wrapper');
+        const overlay = $('videoOverlay');
+        const loading = $('loadingOverlay');
+        const playBtn = $('playBtn');
+        const progressFill = $('progressFill');
+        const progressTrack = $('progressTrack');
+        const currentTimeEl = $('currentTime');
+        const totalTimeEl = $('totalTime');
+        const speedBtn = $('speedBtn');
+        const muteBtn = $('muteBtn');
+        const volumeSlider = $('volumeSlider');
+        const zoomInBtn = $('zoomInBtn');
+        const zoomOutBtn = $('zoomOutBtn');
+        const resetZoomBtn = $('resetZoomBtn');
+        const fullscreenBtn = $('fullscreenBtn');
+        const rewindBtn = $('rewindBtn');
+        const forwardBtn = $('forwardBtn');
 
-    <button class="btn-nav" onclick="showSection('menu')">
-        <i class="fas fa-arrow-right"></i> العودة للقائمة الرئيسية
-    </button>
-</div>
+        // ================================================================
+        //  3.  الإشعارات (Toasts)
+        // ================================================================
+        function showToast(message, duration = 1400) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            container.appendChild(toast);
 
+            // إظهار بعد 10ms لتفعيل الانتقال
+            requestAnimationFrame(() => {
+                toast.classList.add('show');
+            });
 
-    <div id="quiz-ui" style="display: none;">
-        <div class="quiz-card">
-            <div class="quiz-header">
-                <div id="user-display-name" style="font-weight: 800; color: var(--primary);">جاري التحميل...</div>
-                <div class="timer-box" id="timer">المتبقي: 30:00</div>
-            </div>
-            
-            <div class="progress-container">
-                <div class="q-counter" id="q-counter">سؤال 1 من 40</div>
-                <div class="progress-bar"><div id="progress-fill"></div></div>
-            </div>
-
-            <div id="questions-container"></div>
-
-            <div id="confirm-screen" style="display: none;">
-                <h3 style="color: var(--primary); text-align: center;">مراجعة الإجابات</h3>
-                <div id="confirm-list" style="max-height: 300px; overflow-y: auto; margin-bottom: 20px; border: 1px solid #eee; border-radius: 15px; padding: 10px;"></div>
-                <button class="btn-nav" onclick="submitFinal()">تأكيد وإرسال النتيجة ✅</button>
-                <button class="btn-nav secondary" onclick="showQuestion()">تعديل الإجابات ✏️</button>
-            </div>
-
-            <div id="result-screen" style="display: none; text-align: center;">
-                <h2 style="color: var(--primary)">النتيجة النهائية</h2>
-                <div id="score-display" style="font-size: 55px; font-weight: 900; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></div>
-                
-                <div id="final-analysis"></div>
-
-                <div style="display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap;">
-                    <button class="btn-nav" style="flex:1;" onclick="restartQuiz()">إعادة الاختبار 🔄</button>
-                    <button class="btn-nav" style="flex:1; background: #0ea5e9;" onclick="printCertificate()">طباعة الشهادة 📜</button>
-                </div>
-                
-                <button onclick="showSection('menu')" class="back-btn-custom">
-                    <i class="fas fa-home"></i> العودة للقائمة الرئيسية
-                </button>
-            </div>
-
-            <div class="nav-buttons" id="nav-controls">
-                <button class="btn-nav secondary" id="prev-btn" onclick="prevQuestion()">السابق</button>
-                <button class="btn-nav" id="next-btn" onclick="nextQuestion()">التالي</button>
-            </div>
-        </div>
-    </div>
-    
-    <div id="dev-card-global" class="dev-card">
-        <div style="font-weight: 800; color: var(--primary); margin-bottom: 10px; font-size: 19px; text-align: center;">Omar Abdel Tawab Saleh</div>
-        <div class="social-row">
-            <a href="https://wa.me/201202763155" target="_blank" class="circle-link wa-bg"><i class="fab fa-whatsapp"></i></a>
-            <a href="https://www.facebook.com/share/1CGUeNkP75/" target="_blank" class="circle-link fb-bg"><i class="fab fa-facebook-f"></i></a>
-        </div>
-    </div>
-</div>
-
-<div id="certificate-print">
-    <div style="border: 5px solid #1e3a8a; padding: 40px; position: relative;">
-        <h1 style="color: #1e3a8a; font-size: 50px; margin-bottom: 10px;">شهادة تقدير</h1>
-        <p style="font-size: 22px; color: #666;">تتقدم منصة التعليم الرقمي بالشكر والتقدير للطالب:</p>
-        <h2 id="cert-name" style="font-size: 40px; color: #f97316; margin: 20px 0; border-bottom: 2px solid #ddd; display: inline-block; padding: 0 40px;"></h2>
-        <p style="font-size: 22px; color: #666;">وذلك لتميزه في اختبار الاقتصاد وحصوله على درجة:</p>
-        <h2 id="cert-score" style="font-size: 60px; color: #1e3a8a; margin: 10px 0;"></h2>
-        <div style="margin-top: 60px; display: flex; justify-content: space-between; align-items: flex-end;">
-            <div style="text-align: right;">
-                <p style="margin: 0;">التاريخ: <span id="cert-date"></span></p>
-                <p style="margin: 0;">الرقم المرجعي: <span id="cert-ref"></span></p>
-            </div>
-            <div style="text-align: center;">
-                <p style="margin: 0; font-weight: bold;">توقيع المشرف العام</p>
-                <p style="margin: 5px 0 0 0; font-size: 20px; font-family: 'Tajawal'; color: #1e3a8a;">عمر عبد التواب</p>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="feedback-button" onclick="toggleFeedbackPanel()">
-    <i class="fas fa-comment-dots"></i>
-</div>
-
-<div id="feedback-panel">
-    <h3 style="color: var(--primary); margin-top:0;">رأيك يهمنا ✨</h3>
-    <input type="tel" id="user-phone" placeholder="رقم الهاتف (اختياري)">
-    <textarea id="user-suggestion" placeholder="اكتب اقتراحك هنا..."></textarea>
-    <button class="btn-nav" onclick="sendSuggestion()">إرسال الاقتراح</button>
-</div>
-
-<footer>© 2025 Omar Abdel Tawab Saleh - جميع الحقوق محفوظة</footer>
-
-<script>
-    // إعدادات التيليجرام
-    const BOT_TOKEN = '8237095382:AAEwtkETTGq3VEp1flZrIKVXQTWF5KGkCiM'; 
-    const CHAT_ID = '6068331455';     
-
-    // بنك الأسئلة (يمكنك إضافة المزيد هنا)
-    const questions = [
-        { q: "ما هو التعريف الأساسي لعلم الاقتصاد؟", a: "علم دراسة الندرة واختيار البدائل", o: ["علم دراسة الندرة واختيار البدائل", "علم جمع المال فقط", "علم دراسة الطقس", "علم الفلسفة"] },
-        { q: "ما هو الفرق الجوهري بين التجارة الخارجية والدولية؟", a: "الخارجية من وجهة نظر وطنية والدولية من وجهة نظر عالمية", o: ["لا يوجد فرق بينهما", "الخارجية من وجهة نظر وطنية والدولية من وجهة نظر عالمية", "الخارجية تخص السلع والدولية تخص الخدمات", "الخارجية تتم بدون حدود سياسية"] },
-        { q: "حسب حجة 'الصناعة الوليدة'، لماذا تفرض الدولة قيوداً تجارية؟", a: "لمنح الصناعات الناشئة فترة سماح للنمو والمنافسة", o: ["لزيادة أسعار السلع المحلية", "لمنح الصناعات الناشئة فترة سماح للنمو والمنافسة", "لمنع الاستيراد نهائياً", "لتحقيق فائض في ميزان المدفوعات"] },
-        { q: "ماذا يقصد بالتعريفة الجمركية 'النوعية'؟", a: "مبلغ ثابت يفرض على كل وحدة بقطع النظر عن قيمتها", o: ["نسبة مئوية من قيمة السلعة", "ضريبة تفرض على الخدمات فقط", "مبلغ ثابت يفرض على كل وحدة بقطع النظر عن قيمتها", "ضريبة تفرض على الصادرات فقط"] },
-        { q: "في نظرية 'دورة المنتج'، متى تصبح الدولة المبتكرة مستوردة للسلعة؟", a: "في مرحلة التنميط والنمطية", o: ["في مرحلة الابتكار", "في مرحلة النضج", "في مرحلة التنميط والنمطية", "بمجرد اختراع السلعة"] },
-        { q: "أي من الآتي يعتبر من الأسانيد غير الاقتصادية لحماية التجارة؟", a: "حفظ الثقافة والهوية الوطنية", o: ["محاربة البطالة", "حفظ الثقافة والهوية الوطنية", "علاج العجز المالي", "تحقيق كفاءة إنتاجية"] },
-        { q: "ما هو الانتقاد الموجه لحجة 'الصناعة الوليدة'؟", a: "قد تضعف كفاءة الصناعة وتعتمد على الحماية كعكاز دائم", o: ["تؤدي لزيادة الصادرات فوراً", "قد تضعف كفاءة الصناعة وتعتمد على الحماية كعكاز دائم", "تؤدي لخفض الأسعار المحلية", "تمنع الدولة من فرض الضرائب"] },
-        { q: "ما المقصود بنظام 'الترانزيت المباشر'؟", a: "مرور البضاعة فوراً تحت رقابة جمركية دون رسوم عادية", o: ["تخزين البضاعة لفترة طويلة", "مرور البضاعة فوراً تحت رقابة جمركية دون رسوم عادية", "بيع البضاعة في السوق المحلي", "تصنيع البضاعة قبل تصديرها"] },
-        { q: "ما هي الخاصية الأساسية للتعريفة الجمركية 'القيمية'؟", a: "تفرض كنسبة مئوية من قيمة السلعة", o: ["تفرض كمبلغ ثابت على الوزن", "تفرض كنسبة مئوية من قيمة السلعة", "تفرض على السلع المحلية فقط", "تفرض بقرار من المصدر"] },
-        { q: "لماذا تعتبر النقود 'أصلاً عقيماً' في حالة السيولة الكاملة؟", a: "لأنها لا تدر عائداً أو فائدة لصاحبها وهي سائلة", o: ["لأنها صعبة التداول", "لأنها لا تدر عائداً أو فائدة لصاحبها وهي سائلة", "لأنها تفقد قيمتها المادية", "لأنها تستخدم في البنوك فقط"] },
-        { q: "ما هي وظيفة البنك المركزي بصفته 'المقرض الأخير'؟", a: "مد البنوك بالسيولة اللازمة في حالات الأزمات", o: ["إقراض الأفراد والمشروعات الصغيرة", "فتح حسابات توفير للمواطنين", "مد البنوك بالسيولة اللازمة في حالات الأزمات", "تجارة العملات في البورصة"] },
-        { q: "ماذا يحدث عند انخفاض تكاليف النقل والشحن دولياً؟", a: "يزيد حجم التبادل التجاري بين الدول", o: ["يقل حجم التبادل التجاري", "يزيد حجم التبادل التجاري بين الدول", "تتوقف التجارة الخارجية", "يزيد الدخل القومي فقط"] },
-        { q: "لماذا تفرض الدول قيوداً لحماية 'الأمن القومي'؟", a: "لحماية الصناعات الاستراتيجية من الضغوط الخارجية وقت الأزمات", o: ["لزيادة أرباح التجار المحليين", "لتقليل عدد السكان", "لحماية الصناعات الاستراتيجية من الضغوط الخارجية وقت الأزمات", "لتشجيع السياحة"] },
-        { q: "ما هو دور 'غرفة المقاصة' في البنك المركزي؟", a: "تسوية الحسابات والشيكات المتبادلة بين البنوك", o: ["إصدار العملات الورقية", "تسوية الحسابات والشيكات المتبادلة بين البنوك", "منح قروض للمواطنين", "تحديد أسعار السلع"] },
-        { q: "في حالة التضخم، لماذا يعتبر الاحتفاظ بالنقود خسارة؟", a: "بسبب انخفاض القوة الشرائية للنقود", o: ["لأن البنوك تغلق أبوابها", "بسبب انخفاض القوة الشرائية للنقود", "لأن النقود تصبح قديمة", "بسبب زيادة الفوائد"] },
-        { q: "ما هي القناة الأساسية لانتقال السلع الرأسمالية من الدول المتقدمة للنامية؟", a: "التجارة الخارجية", o: ["الاستهلاك المحلي", "التجارة الخارجية", "الضرائب الداخلية", "القروض الشخصية"] },
-        { q: "حسب المعارضين، ما هي 'عدوى الأزمات'؟", a: "انتقال المشاكل الاقتصادية من الدول الشريكة للداخل", o: ["انتشار الأمراض بين التجار", "انتقال المشاكل الاقتصادية من الدول الشريكة للداخل", "زيادة الصادرات بشكل مفاجئ", "توقف البنوك عن العمل"] },
-        { q: "ما هي الدولة التي تعتبر 'النمور الآسيوية' قدوة لها في سياسة التصدير؟", a: "الدول التي تتبع استراتيجية التصنيع للتصدير", o: ["الدول التي تتبع إحلال الواردات", "الدول التي تتبع استراتيجية التصنيع للتصدير", "الدول المنغلقة اقتصادياً", "الدول التي تعتمد على الذهب فقط"] },
-        { q: "من هو صاحب نظرية 'الميزة النسبية'؟", a: "ديفيد ريكاردو", o: ["آدم سميث", "ديفيد ريكاردو", "فرنر وهرش", "عيد عشري"] },
-        { q: "كيف تساهم التجارة في 'نقل المعرفة' (Know-how)؟", a: "عبر احتكاك العمالة المحلية بالخبرات الإدارية الأجنبية", o: ["عبر قراءة الكتب الأجنبية فقط", "عبر احتكاك العمالة المحلية بالخبرات الإدارية الأجنبية", "عبر زيادة الضرائب", "عبر غلق الحدود"] }
-    ];
-
-    let currentIdx = 0;
-    let userAnswers = new Array(questions.length).fill(null);
-    let timeLeft = 30 * 60; 
-    let timerInterval;
-
-    // --- وظيفة العداد العالمي (تم إصلاحها لتكون مستقرة) ---
-    function fetchGlobalVisits() {
-        // نستخدم LocalStorage لمحاكاة العداد بشكل موثوق
-        // أو يمكن استخدام API مثل countapi.xyz إذا كان يعمل
-        let visits = localStorage.getItem('site_visits');
-        if (!visits) {
-            visits = 1250; // رقم بداية افتراضي
-        } else {
-            visits = parseInt(visits) + 1;
-        }
-        localStorage.setItem('site_visits', visits);
-        document.getElementById('global-count').innerText = visits.toLocaleString() + " +";
-    }
-
-    // --- وظائف التنقل والشاشة ---
-    function handleLogin() {
-        const name = document.getElementById('name-input').value;
-        const grade = document.getElementById('grade-input').value;
-        
-        if(!name || !grade) {
-            document.getElementById('auth-err').style.display = 'block'; 
-            return;
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 400);
+            }, duration);
         }
 
-        document.getElementById('user-display-name').innerText = "الطالب: " + name;
-
-        // تنسيق رسالة الدخول (HTML Format)
-        const now = new Date();
-        let loginMsg = `<b>🚀 تسجيل دخول جديد | New Login</b>\n`;
-        loginMsg += `━━━━━━━━━━━━━━━━━━\n`;
-        loginMsg += `👤 <b>الاسم:</b> ${name}\n`;
-        loginMsg += `🏛️ <b>الفرقة:</b> ${grade}\n`;
-        loginMsg += `📅 <b>التاريخ:</b> ${now.toLocaleDateString('ar-EG')}\n`;
-        loginMsg += `🕒 <b>الوقت:</b> ${now.toLocaleTimeString('ar-EG')}\n`;
-        loginMsg += `🌐 <b>المصدر:</b> منصة الاقتصاد الرقمية`;
-
-        sendToTelegram(loginMsg);
-
-        document.getElementById('auth-screen').style.display = 'none';
-        document.getElementById('main-menu').style.display = 'block';
-    }
-
-    function showSection(section) {
-        document.getElementById('main-menu').style.display = 'none';
-        document.getElementById('explanation-section').style.display = 'none';
-        document.getElementById('quiz-ui').style.display = 'none';
-
-        if(section === 'explanation') {
-            document.getElementById('explanation-section').style.display = 'block';
-        } else if(section === 'quiz') {
-            document.getElementById('quiz-ui').style.display = 'block';
-            startQuiz();
-        } else {
-            // العودة للقائمة الرئيسية
-            document.getElementById('main-menu').style.display = 'block';
-            
-            // هام جداً: مسح محتوى تحليل النتائج عند العودة للرئيسية
-            document.getElementById('final-analysis').innerHTML = '';
-            document.getElementById('score-display').innerText = '';
+        // ================================================================
+        //  4.  تهيئة مشغل اليوتيوب
+        // ================================================================
+        function onYouTubeIframeAPIReady() {
+            state.player = new YT.Player('player', {
+                videoId: 'WJsOHealXwk',
+                playerVars: {
+                    controls: 0,
+                    rel: 0,
+                    modestbranding: 1,
+                    iv_load_policy: 3,
+                    disablekb: 1,  // نمنع اختصارات يوتيوب الأصلية
+                },
+                events: {
+                    onReady: onPlayerReady,
+                    onStateChange: onPlayerStateChange,
+                    onError: (e) => showToast('⚠️ حدث خطأ في الفيديو'),
+                }
+            });
         }
-    }
 
-    // --- منطق الاختبار ---
-    function startTimer() {
-        if(timerInterval) clearInterval(timerInterval);
-        timerInterval = setInterval(() => {
-            timeLeft--;
-            let m = Math.floor(timeLeft / 60), s = timeLeft % 60;
-            document.getElementById('timer').innerText = `المتبقي: ${m}:${s < 10 ? '0'+s : s}`;
-            if(timeLeft <= 0) submitFinal();
-        }, 1000);
-    }
+        // ================================================================
+        //  5.  أحداث المشغل
+        // ================================================================
+        function onPlayerReady(event) {
+            state.isReady = true;
+            loading.classList.remove('active');
 
-    function startQuiz() {
-        currentIdx = 0;
-        userAnswers = new Array(questions.length).fill(null);
-        timeLeft = 30 * 60;
-        document.getElementById('result-screen').style.display = 'none'; // إخفاء النتيجة القديمة
-        startTimer();
-        showQuestion();
-    }
+            // ضبط مستوى الصوت
+            state.player.setVolume(state.currentVolume);
+            volumeSlider.value = state.currentVolume;
 
-    function showQuestion() {
-        const q = questions[currentIdx];
-        document.getElementById('questions-container').style.display = 'block';
-        document.getElementById('confirm-screen').style.display = 'none';
-        document.getElementById('nav-controls').style.display = 'flex';
-        
-        document.getElementById('questions-container').innerHTML = `
-            <div class="q-text">${currentIdx + 1}. ${q.q}</div>
-            ${q.o.map(opt => `<div class="option-btn ${userAnswers[currentIdx] === opt ? 'selected' : ''}" onclick="selectOption('${opt}')">${opt}</div>`).join('')}`;
-            
-        document.getElementById('prev-btn').disabled = currentIdx === 0;
-        document.getElementById('next-btn').innerText = currentIdx === questions.length - 1 ? "مراجعة الإجابات" : "التالي";
-        document.getElementById('q-counter').innerText = `سؤال ${currentIdx + 1} من ${questions.length}`;
-        document.getElementById('progress-fill').style.width = `${((currentIdx + 1) / questions.length) * 100}%`;
-    }
+            // قراءة المدة الكلية
+            state.duration = state.player.getDuration();
+            updateTotalTime();
 
-    function selectOption(opt) { userAnswers[currentIdx] = opt; showQuestion(); }
-    function nextQuestion() { if(currentIdx < questions.length - 1) { currentIdx++; showQuestion(); } else { showConfirmation(); } }
-    function prevQuestion() { if(currentIdx > 0) { currentIdx--; showQuestion(); } }
+            // تحديث شريط التقدم بشكل دوري
+            startProgressUpdater();
 
-    function showConfirmation() {
-        document.getElementById('questions-container').style.display = 'none';
-        document.getElementById('nav-controls').style.display = 'none';
-        document.getElementById('confirm-screen').style.display = 'block';
-        document.getElementById('confirm-list').innerHTML = userAnswers.map((ans, i) => `
-            <div style="padding:10px; border-bottom:1px solid #eee; text-align:right;">
-                <strong>${i+1}. ${questions[i].q}</strong><br>
-                <span style="color:var(--accent)">إجابتك: ${ans || '⚠️ لم يتم الإجابة'}</span>
-            </div>`).join('');
-    }
+            // إظهار حالة جاهزية
+            showToast('✅ الفيديو جاهز', 1000);
+        }
 
-    function submitFinal() {
-        clearInterval(timerInterval);
-        const name = document.getElementById('name-input').value;
-        const timeSpentMin = 30 - Math.floor(timeLeft / 60);
-        let score = 0;
-        
-        // بناء HTML الخاص بالتحليل داخل المتغير
-        let analysisHtml = '';
+        function onPlayerStateChange(event) {
+            const data = event.data;
+            if (data === YT.PlayerState.PLAYING) {
+                state.isPlaying = true;
+                playBtn.textContent = '⏸';
+                loading.classList.remove('active');
+            } else if (data === YT.PlayerState.PAUSED) {
+                state.isPlaying = false;
+                playBtn.textContent = '▶';
+            } else if (data === YT.PlayerState.ENDED) {
+                state.isPlaying = false;
+                playBtn.textContent = '▶';
+                progressFill.style.width = '100%';
+                showToast('🏁 انتهى الفيديو', 1200);
+            } else if (data === YT.PlayerState.BUFFERING) {
+                loading.classList.add('active');
+            } else if (data === YT.PlayerState.CUED) {
+                loading.classList.remove('active');
+            }
+        }
 
-        userAnswers.forEach((ans, i) => {
-            const isCorrect = (ans === questions[i].a);
-            if(isCorrect) score++;
+        // ================================================================
+        //  6.  تحديث شريط التقدم والوقت
+        // ================================================================
+        let progressInterval = null;
 
-            // تصميم بوكس لكل سؤال
-            analysisHtml += `
-                <div style="padding:15px; margin-bottom:10px; background:${isCorrect ? '#f0fdf4' : '#fef2f2'}; border-radius:10px; border:1px solid ${isCorrect ? '#bbf7d0' : '#fecaca'};">
-                    <div style="font-weight:bold; margin-bottom:5px; color:#1e293b;">
-                        ${i + 1}. ${questions[i].q}
-                        ${isCorrect ? '✅' : '❌'}
-                    </div>
-                    <div style="font-size:14px; color:#475569;">إجابتك: <span style="font-weight:bold;">${ans || 'لا يوجد'}</span></div>
-                    ${!isCorrect ? `<div style="font-size:14px; color:#166534; margin-top:5px;">💡 الصحيح: <b>${questions[i].a}</b></div>` : ''}
-                </div>`;
+        function startProgressUpdater() {
+            if (progressInterval) clearInterval(progressInterval);
+            progressInterval = setInterval(() => {
+                if (!state.player || !state.isReady) return;
+                const current = state.player.getCurrentTime();
+                const duration = state.player.getDuration();
+                if (duration > 0) {
+                    const percent = (current / duration) * 100;
+                    progressFill.style.width = Math.min(percent, 100) + '%';
+                    currentTimeEl.textContent = formatTime(current);
+                    state.currentTime = current;
+                    state.duration = duration;
+                }
+            }, 250);
+        }
+
+        function updateTotalTime() {
+            if (state.duration) {
+                totalTimeEl.textContent = formatTime(state.duration);
+            }
+        }
+
+        function formatTime(seconds) {
+            if (!seconds || isNaN(seconds)) return '00:00';
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+        }
+
+        // ================================================================
+        //  7.  التحكم الأساسي (تشغيل، إيقاف، سرعة، صوت، زوم، ملء الشاشة)
+        // ================================================================
+
+        // --- تشغيل / إيقاف ---
+        function togglePlay() {
+            if (!state.player) return;
+            if (state.isPlaying) {
+                state.player.pauseVideo();
+            } else {
+                state.player.playVideo();
+            }
+        }
+
+        // --- تقديم / تأخير ---
+        function seek(seconds) {
+            if (!state.player) return;
+            const current = state.player.getCurrentTime();
+            const newTime = Math.min(Math.max(current + seconds, 0), state.duration);
+            state.player.seekTo(newTime, true);
+            showToast(`${seconds > 0 ? '⏩' : '⏪'} ${Math.abs(seconds)} ثانية`, 600);
+        }
+
+        // --- تغيير السرعة ---
+        function cycleSpeed() {
+            const speeds = [0.5, 0.75, 1, 1.25, 1.5, 2];
+            let idx = speeds.indexOf(state.playbackRate);
+            idx = (idx + 1) % speeds.length;
+            const newRate = speeds[idx];
+            state.player.setPlaybackRate(newRate);
+            state.playbackRate = newRate;
+            speedBtn.textContent = newRate.toFixed(1) + '×';
+            showToast(`⚡ السرعة: ${newRate.toFixed(1)}×`, 800);
+        }
+
+        // --- الصوت ---
+        function toggleMute() {
+            if (!state.player) return;
+            state.isMuted = !state.isMuted;
+            state.player.setMute(state.isMuted);
+            muteBtn.textContent = state.isMuted ? '🔇' : '🔊';
+            volumeSlider.value = state.isMuted ? 0 : state.currentVolume;
+            showToast(state.isMuted ? '🔇 كتم الصوت' : '🔊 إلغاء الكتم', 600);
+        }
+
+        function setVolume(val) {
+            const vol = parseInt(val);
+            state.currentVolume = vol;
+            if (state.player) {
+                state.player.setVolume(vol);
+                if (vol === 0) {
+                    state.isMuted = true;
+                    muteBtn.textContent = '🔇';
+                } else {
+                    state.isMuted = false;
+                    muteBtn.textContent = '🔊';
+                    state.player.unMute();
+                }
+            }
+        }
+
+        // --- الزوم ---
+        function setZoom(level) {
+            // حدود آمنة
+            const newLevel = Math.min(Math.max(level, 0.5), 2.0);
+            state.zoomLevel = newLevel;
+            wrapper.style.transform = `scale(${newLevel})`;
+            showToast(`🔍 تكبير: ${newLevel.toFixed(2)}×`, 700);
+        }
+
+        function resetZoom() {
+            setZoom(1);
+        }
+
+        // --- ملء الشاشة ---
+        function toggleFullscreen() {
+            const el = wrapper;
+            if (!document.fullscreenElement) {
+                const req = el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
+                if (req) req.call(el);
+            } else {
+                const exit = document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen;
+                if (exit) exit.call(document);
+            }
+        }
+
+        // ================================================================
+        //  8.  ربط الأحداث (Event Listeners)
+        // ================================================================
+
+        // --- أزرار التحكم ---
+        playBtn.addEventListener('click', togglePlay);
+        overlay.addEventListener('click', togglePlay);  // نقر على الفيديو
+
+        rewindBtn.addEventListener('click', () => seek(-5));
+        forwardBtn.addEventListener('click', () => seek(5));
+
+        speedBtn.addEventListener('click', cycleSpeed);
+
+        muteBtn.addEventListener('click', toggleMute);
+        volumeSlider.addEventListener('input', (e) => setVolume(e.target.value));
+
+        zoomInBtn.addEventListener('click', () => setZoom(state.zoomLevel + 0.15));
+        zoomOutBtn.addEventListener('click', () => setZoom(state.zoomLevel - 0.15));
+        resetZoomBtn.addEventListener('click', resetZoom);
+
+        fullscreenBtn.addEventListener('click', toggleFullscreen);
+
+        // --- شريط التقدم (النقر للانتقال) ---
+        progressTrack.addEventListener('click', (e) => {
+            if (!state.player || !state.duration) return;
+            const rect = progressTrack.getBoundingClientRect();
+            const x = (e.clientX - rect.left) / rect.width;
+            const seekTime = x * state.duration;
+            state.player.seekTo(seekTime, true);
+            showToast(`⏱️ ${formatTime(seekTime)}`, 500);
         });
 
-        let gradeLabel = "يحتاج مراجعة ⚠️";
-        if (score >= (questions.length * 0.85)) gradeLabel = "ممتاز ✨";
-        else if (score >= (questions.length * 0.75)) gradeLabel = "جيد جداً 🌟";
-        else if (score >= (questions.length * 0.50)) gradeLabel = "مقبول 👍";
+        // --- لوحة المفاتيح ---
+        document.addEventListener('keydown', (e) => {
+            // نتجنب التعارض مع الحقول النصية
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
-        // عرض النتائج
-        document.getElementById('confirm-screen').style.display = 'none';
-        document.getElementById('result-screen').style.display = 'block';
-        document.getElementById('score-display').innerText = `${score} / ${questions.length}`;
-        
-        // وضع التحليل داخل الصندوق المخصص
-        document.getElementById('final-analysis').innerHTML = analysisHtml;
+            switch (e.key) {
+                case ' ':
+                case 'Space':
+                    e.preventDefault();
+                    togglePlay();
+                    break;
+                case 'ArrowRight':
+                    e.preventDefault();
+                    seek(5);
+                    break;
+                case 'ArrowLeft':
+                    e.preventDefault();
+                    seek(-5);
+                    break;
+                case 'f':
+                case 'F':
+                    e.preventDefault();
+                    toggleFullscreen();
+                    break;
+                case 'm':
+                case 'M':
+                    e.preventDefault();
+                    toggleMute();
+                    break;
+                case 'r':
+                case 'R':
+                    e.preventDefault();
+                    resetZoom();
+                    break;
+            }
+        });
 
-        // إرسال النتيجة بتنسيق جذاب
-        let resultMsg = `<b>🏆 نتيجة اختبار جديدة</b>\n`;
-        resultMsg += `━━━━━━━━━━━━━━━━━━\n`;
-        resultMsg += `👤 <b>الطالب:</b> ${name}\n`;
-        resultMsg += `📊 <b>الدرجة:</b> ${score} من ${questions.length}\n`;
-        resultMsg += `🎖️ <b>التقدير:</b> ${gradeLabel}\n`;
-        resultMsg += `⏱️ <b>الوقت:</b> ${timeSpentMin} دقيقة`;
-        
-        sendToTelegram(resultMsg);
-    }
+        // --- استماع لتغيير ملء الشاشة (لتحديث الزر) ---
+        document.addEventListener('fullscreenchange', updateFullscreenButton);
+        document.addEventListener('webkitfullscreenchange', updateFullscreenButton);
+        document.addEventListener('msfullscreenchange', updateFullscreenButton);
 
-    function restartQuiz() { showSection('quiz'); }
-
-    function printCertificate() {
-        const name = document.getElementById('name-input').value;
-        const score = document.getElementById('score-display').innerText;
-        document.getElementById('cert-name').innerText = name;
-        document.getElementById('cert-score').innerText = score;
-        document.getElementById('cert-date').innerText = new Date().toLocaleDateString('ar-EG');
-        document.getElementById('cert-ref').innerText = Math.floor(Math.random() * 90000) + 10000;
-        const cert = document.getElementById('certificate-print');
-        cert.style.display = 'block';
-        setTimeout(() => { window.print(); cert.style.display = 'none'; }, 500);
-    }
-
-    // --- وظائف المراسلة ---
-    function sendToTelegram(text) {
-        // إضافة parse_mode=HTML لتفعيل التنسيق
-        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(text)}&parse_mode=HTML`);
-    }
-
-    function toggleFeedbackPanel() {
-        const panel = document.getElementById('feedback-panel');
-        panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
-    }
-
-    function sendSuggestion() {
-        const phone = document.getElementById('user-phone').value;
-        const suggestion = document.getElementById('user-suggestion').value;
-        const name = document.getElementById('name-input').value || "زائر";
-        
-        if(suggestion) {
-            let feedbackMsg = `<b>💡 اقتراح / رسالة جديدة</b>\n`;
-            feedbackMsg += `━━━━━━━━━━━━━━━━━━\n`;
-            feedbackMsg += `👤 <b>الاسم:</b> ${name}\n`;
-            feedbackMsg += `📱 <b>الهاتف:</b> ${phone || 'غير مدخل'}\n`;
-            feedbackMsg += `📝 <b>المحتوى:</b>\n${suggestion}`;
-
-            sendToTelegram(feedbackMsg);
-
-            alert("شكراً لك! تم إرسال رسالتك بنجاح.");
-            toggleFeedbackPanel();
-            document.getElementById('user-suggestion').value = "";
-        } else {
-            alert("يرجى كتابة الاقتراح أولاً");
+        function updateFullscreenButton() {
+            state.isFullscreen = !!document.fullscreenElement;
+            fullscreenBtn.textContent = state.isFullscreen ? '⛶' : '⛶';
         }
-    }
 
-    // تشغيل العداد عند التحميل
-    window.onload = fetchGlobalVisits;
-</script>
+        // ================================================================
+        //  9.  معالجة تغيير حجم النافذة (للحفاظ على الزوم)
+        // ================================================================
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                // نعيد تطبيق الزوم لضمان الثبات
+                wrapper.style.transform = `scale(${state.zoomLevel})`;
+            }, 150);
+        });
+
+        // ================================================================
+        // 10.  تهيئة إضافية عند تحميل الصفحة
+        // ================================================================
+        window.addEventListener('load', () => {
+            // نضبط القيم الابتدائية
+            speedBtn.textContent = '1.0×';
+            // نعرض رسالة ترحيب
+            setTimeout(() => showToast('🎬 استخدم Space للتشغيل/الإيقاف', 2000), 500);
+        });
+
+        // ================================================================
+        // 11.  Export للاختبار (اختياري)
+        // ================================================================
+        console.log('✅ مشغل الفيديو المتطور جاهز!');
+        console.log('📖 اختصارات: Space (تشغيل/إيقاف)، ← → (تقديم/تأخير 5ث)، F (شاشة كاملة)، M (كتم)');
+    </script>
+
 </body>
 </html>
